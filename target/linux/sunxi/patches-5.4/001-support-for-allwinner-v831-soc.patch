@@ -1,0 +1,4335 @@
+From patchwork Sat Dec 12 04:01:57 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969871
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B00FC433FE
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:04:46 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id B570B23106
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:04:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org B570B23106
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=M/Egy1KCIN9Ial1sPM8mTkBC1AsNr9vWOFi5M2tyFwU=; b=Ko4mPmFpQdZSwlNQ1R/MOoTBe
+	GMjZC90hSExF1/va0lU8Mw8i5yd7F7jyTLFgWeodm9QJLIzkKQ2axA6wtsCd/ywLAXJoHp7uI0Nmp
+	MI6ueBbPLa81pjn+MUknMMueEgAQ6sj79s3tKDSR85yYiChNW24GMvI0zbdptPcHXg2TfLNkuMDcb
+	CG9ZLjPZZxguUKMFU0OKmdojlDoiMv6wYRPHzIUZoq7NMAap7uTwFZwTeB1cM/4fTdFQ0+sobF1SR
+	f/lWcNf/7Yfg8kPFtalcv8ooCNGrwMmTFU+9mJjOw1nqjAz9H+j28TTJXfI590HGJF5vqeBFNMxsZ
+	OUt2DnNXg==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knw7E-0008QV-KT; Sat, 12 Dec 2020 04:02:40 +0000
+Received: from relay3.mymailcheap.com ([217.182.66.161])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knw7A-0008Q3-U3
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 04:02:38 +0000
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com
+ [149.56.130.247])
+ by relay3.mymailcheap.com (Postfix) with ESMTPS id 6A9A03F1CC;
+ Sat, 12 Dec 2020 05:02:32 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter1.mymailcheap.com (Postfix) with ESMTP id B58642A379;
+ Fri, 11 Dec 2020 23:02:31 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607745751;
+ bh=Ex4mc7NXJhRGG+TeDdcdGf93CvUJv28QuAB1JF2sM8w=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=yOCUCLIiCJlreMW3+kthjjz/Zanv6y2We+L27XPYDEaq6EIl1MocZnYF9w+FGFP+V
+ HTkXpMQ+Xt/g4CjGDiNDfyGRjX5ES/daDipXkwis4dET5V0uY2skfS+sZKjorHixl6
+ zGRt4UoQ4tQYqF37KCeALOMX+TT6ZUZK2ABpyEOI=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+ by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id dkp42BNtIuuS; Fri, 11 Dec 2020 23:02:30 -0500 (EST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter1.mymailcheap.com (Postfix) with ESMTPS;
+ Fri, 11 Dec 2020 23:02:30 -0500 (EST)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id 7EE2442F46;
+ Sat, 12 Dec 2020 04:02:29 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="eiqE8c/L";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 147EE42F46;
+ Sat, 12 Dec 2020 04:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607745746; bh=Ex4mc7NXJhRGG+TeDdcdGf93CvUJv28QuAB1JF2sM8w=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=eiqE8c/LzheGddmbuadAEFGA/KR/z5s6K5CR7qffAL5+ctXfJY8y6Mjtl+DPEXxXl
+ /xs9cFxJ1WHc4TQbA3qiul6YazhmjWpfCU5Zllyr53FEe5Pv1EaviEGtu4RQm7uvDU
+ FGyB9cejkKf1PEjywy4GMewvC2G1pwl8DVfoNj40=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 01/12] dt-bindings: clock: sunxi-ng: add compatible for
+ V831/V833 CCU
+Date: Sat, 12 Dec 2020 12:01:57 +0800
+Message-Id: <20201212040157.3639864-2-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; RCVD_VIA_SMTP_AUTH(0.00)[];
+ ARC_NA(0.00)[]; R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[213.133.102.83];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[8];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
+X-Rspamd-Queue-Id: 7EE2442F46
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201211_230237_350070_3B6A3DB4 
+X-CRM114-Status: GOOD (  12.88  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831/V833 has a CCU similar to the ones on H6/A100.
+
+Add a compatible string for it.
+
+As the user manual do not mention the difference between V831 and V833
+in the CCU chapter, only a single compatible string for V833
+(full-functional chip) is made.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml      | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
+index 3b45344ed758..b874d887995a 100644
+--- a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
++++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
+@@ -33,6 +33,7 @@ properties:
+       - allwinner,sun8i-r40-ccu
+       - allwinner,sun8i-v3-ccu
+       - allwinner,sun8i-v3s-ccu
++      - allwinner,sun8i-v833-ccu
+       - allwinner,sun9i-a80-ccu
+       - allwinner,sun50i-a64-ccu
+       - allwinner,sun50i-a64-r-ccu
+@@ -98,6 +99,7 @@ else:
+     properties:
+       compatible:
+         enum:
++          - allwinner,sun8i-v833-ccu
+           - allwinner,sun50i-a100-ccu
+           - allwinner,sun50i-h6-ccu
+ 
+
+From patchwork Sat Dec 12 04:03:08 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969875
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D820C4361B
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:04:53 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 413D923106
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:04:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 413D923106
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=USaLNtHObT+xWQCQ4i+0wFWCKmJoS93lr9e8EzKGwMQ=; b=d5UGH5UYiCL5wT9kFu3Gr4XOi
+	337n41ZjBAWqMTY+ZvnzIRByBekpEVqNhmU2kalmcL3dUIxMGqrjBpiBdyG4uUQ8xMrwyQKVo+5CN
+	xeIxRs3+6AG2LjjOio920FxEuAy6a4bRTJ1AsMk2U9foGQR4rLxCyHfYczZMc460R9hrkF/FOQ8ka
+	bxiZ6AF8mIO0GGeemIDQyZ27zZpKOiQh8k9Ub69W93rKXJWjqs4QmkoyoQceXA/P0EZmp6polyVVX
+	U2p95e/xEW2qP3MWi6szQYlGNLECYapdkm3BoBDvp998AKuSra9BzY+pggOTMwdW/8NAqoMsIwGim
+	6x5ZauvDA==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knw8I-0008Tw-Rq; Sat, 12 Dec 2020 04:03:46 +0000
+Received: from relay2.mymailcheap.com ([217.182.66.162])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knw8G-0008T5-F3
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 04:03:45 +0000
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com
+ [91.134.140.82])
+ by relay2.mymailcheap.com (Postfix) with ESMTPS id 548103EDEC;
+ Sat, 12 Dec 2020 05:03:40 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter2.mymailcheap.com (Postfix) with ESMTP id 2CA5E2A5BB;
+ Sat, 12 Dec 2020 05:03:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607745820;
+ bh=tCgOsg76P+Ko8S868gu/lAWhlOBjttNBR7Znp3KX0Ow=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=bE0MnyztCSvy0PtUc8oIt65pYPoX5IgwF7wi5TGg5gxqJw52uzw9k8ArwG9sjqEbN
+ 9VqOF1JEM4No8V8fRmokkjp/zi+6bU8+iNubkI/MCaOY2H8/r4dWALz25X0IpiF9G5
+ BgX9c96MQap1Zhw8dvmIaB3irwt/Vqq/CI9hdh5s=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+ by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id mzqLsyATAbzg; Sat, 12 Dec 2020 05:03:38 +0100 (CET)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter2.mymailcheap.com (Postfix) with ESMTPS;
+ Sat, 12 Dec 2020 05:03:38 +0100 (CET)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id 9E42542F58;
+ Sat, 12 Dec 2020 04:03:38 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="bgxE3xO2";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 709FD42F57;
+ Sat, 12 Dec 2020 04:03:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607745814; bh=tCgOsg76P+Ko8S868gu/lAWhlOBjttNBR7Znp3KX0Ow=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=bgxE3xO2QIICNssqIioAso9UlYPXTsvGHb/hNkaKZxQmSJQhcELsdR9g8JWUe0guN
+ bZO1KStQ/ODVTm5TJeocfFzkQyAYm1OpAjc6Fi/2pmK5UTuTZzEsP2M4WPz9yCbL1I
+ YllB9Y4gMLaP1xSkTjlvqFdz0Fg9EZ2DhkFaV9NY=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 02/12] dt-bindings: clk: sunxi-ng: add V833 CCU
+ clock/reset indices headers
+Date: Sat, 12 Dec 2020 12:03:08 +0800
+Message-Id: <20201212040318.3640236-1-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; ARC_NA(0.00)[];
+ RCVD_VIA_SMTP_AUTH(0.00)[];
+ R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all:c];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[148.251.23.173];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[8];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Queue-Id: 9E42542F58
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201211_230344_690006_77B65D1E 
+X-CRM114-Status: GOOD (  16.60  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+As the device tree needs the clock/reset indices, add them to DT binding
+headers.
+
+The driver itself will be then added.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ include/dt-bindings/clock/sun8i-v833-ccu.h | 89 ++++++++++++++++++++++
+ include/dt-bindings/reset/sun8i-v833-ccu.h | 52 +++++++++++++
+ 2 files changed, 141 insertions(+)
+ create mode 100644 include/dt-bindings/clock/sun8i-v833-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun8i-v833-ccu.h
+
+diff --git a/include/dt-bindings/clock/sun8i-v833-ccu.h b/include/dt-bindings/clock/sun8i-v833-ccu.h
+new file mode 100644
+index 000000000000..885f3462eab6
+--- /dev/null
++++ b/include/dt-bindings/clock/sun8i-v833-ccu.h
+@@ -0,0 +1,89 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (C) 2020 Icenowy Zheng <icenowy@aosc.io>
++ */
++
++#ifndef _DT_BINDINGS_CLK_SUN8I_V833_H_
++#define _DT_BINDINGS_CLK_SUN8I_V833_H_
++
++#define CLK_CPUX		14
++
++#define CLK_APB1		19
++
++#define CLK_DE			21
++#define CLK_BUS_DE		22
++#define CLK_G2D			23
++#define CLK_BUS_G2D		24
++#define CLK_CE			25
++#define CLK_BUS_CE		26
++#define CLK_VE			27
++#define CLK_BUS_VE		28
++#define CLK_EISE		29
++#define CLK_BUS_EISE		30
++#define CLK_NPU			31
++#define CLK_BUS_NPU		32
++#define CLK_BUS_DMA		33
++#define CLK_BUS_HSTIMER		34
++#define CLK_AVS			35
++#define CLK_BUS_DBG		36
++#define CLK_BUS_PSI		37
++#define CLK_BUS_PWM		38
++#define CLK_MBUS_DMA		40
++#define CLK_MBUS_VE		41
++#define CLK_MBUS_CE		42
++#define CLK_MBUS_TS		43
++#define CLK_MBUS_NAND		44
++#define CLK_MBUS_G2D		45
++#define CLK_MBUS_EISE		46
++#define CLK_MBUS_VDPO		47
++#define CLK_MMC0		49
++#define CLK_MMC1		50
++#define CLK_MMC2		51
++#define CLK_BUS_MMC0		52
++#define CLK_BUS_MMC1		53
++#define CLK_BUS_MMC2		54
++#define CLK_BUS_UART0		55
++#define CLK_BUS_UART1		56
++#define CLK_BUS_UART2		57
++#define CLK_BUS_UART3		58
++#define CLK_BUS_I2C0		59
++#define CLK_BUS_I2C1		60
++#define CLK_BUS_I2C2		61
++#define CLK_BUS_I2C3		62
++#define CLK_SPI0		63
++#define CLK_SPI1		64
++#define CLK_SPI2		65
++#define CLK_BUS_SPI0		66
++#define CLK_BUS_SPI1		67
++#define CLK_BUS_SPI2		68
++#define CLK_EMAC_25M		69
++#define CLK_BUS_EMAC0		70
++#define CLK_BUS_GPADC		71
++#define CLK_BUS_THS		72
++#define CLK_I2S0		73
++#define CLK_I2S1		74
++#define CLK_BUS_I2S0		75
++#define CLK_BUS_I2S1		76
++#define CLK_AUDIO_CODEC_1X	77
++#define CLK_AUDIO_CODEC_4X	78
++#define CLK_BUS_AUDIO_CODEC	79
++#define CLK_USB_OHCI0		80
++#define CLK_USB_PHY0		81
++#define CLK_BUS_OHCI0		82
++#define CLK_BUS_EHCI0		83
++#define CLK_BUS_OTG		84
++#define CLK_MIPI_DSI_DPHY0_HS	85
++#define CLK_MIPI_DSI_HOST0	86
++#define CLK_BUS_MIPI_DSI	87
++#define CLK_BUS_TCON_TOP	88
++#define CLK_TCON_LCD0		89
++#define CLK_BUS_TCON_LCD0	90
++#define CLK_CSI_TOP		91
++#define CLK_CSI_MCLK0		92
++#define CLK_CSI_MCLK1		93
++#define CLK_ISP			94
++#define CLK_BUS_CSI		95
++#define CLK_DSPO		96
++#define CLK_BUS_DSPO		97
++
++#endif /* _DT_BINDINGS_CLK_SUN8I_V833_H_ */
+diff --git a/include/dt-bindings/reset/sun8i-v833-ccu.h b/include/dt-bindings/reset/sun8i-v833-ccu.h
+new file mode 100644
+index 000000000000..fb2b0e3b287f
+--- /dev/null
++++ b/include/dt-bindings/reset/sun8i-v833-ccu.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
++ */
++
++#ifndef _DT_BINDINGS_RESET_SUN8I_V833_H_
++#define _DT_BINDINGS_RESET_SUN8I_V833_H_
++
++#define RST_MBUS		0
++#define RST_BUS_DE		1
++#define RST_BUS_G2D		2
++#define RST_BUS_CE		3
++#define RST_BUS_VE		4
++#define RST_BUS_EISE		5
++#define RST_BUS_NPU		6
++#define RST_BUS_DMA		7
++#define RST_BUS_HSTIMER		8
++#define RST_BUS_DBG		9
++#define RST_BUS_PSI		10
++#define RST_BUS_PWM		11
++#define RST_BUS_DRAM		12
++#define RST_BUS_MMC0		13
++#define RST_BUS_MMC1		14
++#define RST_BUS_MMC2		15
++#define RST_BUS_UART0		16
++#define RST_BUS_UART1		17
++#define RST_BUS_UART2		18
++#define RST_BUS_UART3		19
++#define RST_BUS_I2C0		20
++#define RST_BUS_I2C1		21
++#define RST_BUS_I2C2		22
++#define RST_BUS_I2C3		23
++#define RST_BUS_SPI0		24
++#define RST_BUS_SPI1		25
++#define RST_BUS_SPI2		26
++#define RST_BUS_EMAC0		27
++#define RST_BUS_GPADC		28
++#define RST_BUS_THS		29
++#define RST_BUS_I2S0		30
++#define RST_BUS_I2S1		31
++#define RST_BUS_AUDIO_CODEC	32
++#define RST_USB_PHY0		33
++#define RST_BUS_OHCI0		34
++#define RST_BUS_EHCI0		35
++#define RST_BUS_OTG		36
++#define RST_BUS_MIPI_DSI	37
++#define RST_BUS_TCON_TOP	38
++#define RST_BUS_TCON_LCD0	39
++#define RST_BUS_CSI		40
++#define RST_BUS_DSPO		41
++
++#endif /* _DT_BINDINGS_RESET_SUN8I_V833_H_ */
+
+From patchwork Sat Dec 12 04:03:09 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969877
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB49C433FE
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:05:13 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id C715F23106
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:05:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org C715F23106
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=MtJ51NXHOvu9pR8C5cTzQmznFGoHu3GYp+oVdytm79Q=; b=zdFTnySc5KKt9TcZBT2CAWOuH
+	dSAKomApFzxbIpvohkAoVpJCOLIfJ60qB/o2vOGN4KyLblGtj4Kmq+zGWq5BqjHSQdaK6+4SOB6vg
+	n2QbEJ6mH5JL+zsYo/abyXXcT1OHcXTar2XODDAuqvUV30zt9ymg6gRkHkBpWff4yKBFEEDrAReZm
+	oIKF0VwmVMO2Y/OiaabX3EF9tfw6JhK4PM6YCtB2SYAT6QByyKd9uqk/UyZnxPF16fQg5BPnxEUnu
+	MOYCdlfa5qAAQvbzTy11zYeXjkuPRHE+JHrAqiUayK73FXyPB3JOYDDse8zX4zkuOmvmFYPNNqDQ5
+	GLwVaeNFg==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knw8S-0008W1-J8; Sat, 12 Dec 2020 04:03:56 +0000
+Received: from relay3.mymailcheap.com ([217.182.66.161])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knw8O-0008V2-8U
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 04:03:54 +0000
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com
+ [149.56.130.247])
+ by relay3.mymailcheap.com (Postfix) with ESMTPS id 2AC883F207;
+ Sat, 12 Dec 2020 05:03:51 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter1.mymailcheap.com (Postfix) with ESMTP id 500FF2A36D;
+ Fri, 11 Dec 2020 23:03:50 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607745830;
+ bh=5eDQy4yF4Sdl2nAb+gO4jhBQE5ZQZlb+o4Ar6mAQYHo=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=KgA2Q6Frk1Xbv4mnykczaO7s1xmE6aCUrnTO085q5StSze8k4Mp6E0vJHDTH/8ezO
+ yVcF3suiosJ/rhj/vwdj8rGDOz2PZCOe7Ew9Bxs3FRqKDYsp8awKrQhLAE0yZbId9K
+ FhOycrIbnsUMKsrxc7+SevU/lgRSPSPXllt/vxww=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+ by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 9tMZVbYDafCC; Fri, 11 Dec 2020 23:03:48 -0500 (EST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter1.mymailcheap.com (Postfix) with ESMTPS;
+ Fri, 11 Dec 2020 23:03:48 -0500 (EST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id 1729C42F57;
+ Sat, 12 Dec 2020 04:03:47 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="G+37P/cA";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 4F5DA42F57;
+ Sat, 12 Dec 2020 04:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607745821; bh=5eDQy4yF4Sdl2nAb+gO4jhBQE5ZQZlb+o4Ar6mAQYHo=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=G+37P/cAJ9qc4ishnhJZFAYjiE+Neuui6+qWICxAXA32YJ7A2ir9yN5pt8x9so7+g
+ qDQ1Pgj9wa+XH7Wh4CWQrtibiwd+T9KISmna5f01LKbRiFoogE286Sv5qX24FFLwhQ
+ t0mNtaE1pS0S2eBbISqZaN+8ywulspkWNSfpIzsw=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 03/12] clk: sunxi-ng: add CCU driver for V831/V833
+Date: Sat, 12 Dec 2020 12:03:09 +0800
+Message-Id: <20201212040318.3640236-2-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; ARC_NA(0.00)[];
+ RCVD_VIA_SMTP_AUTH(0.00)[];
+ R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all:c];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[148.251.23.173];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[8];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Queue-Id: 1729C42F57
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201211_230352_699949_30A1F891 
+X-CRM114-Status: GOOD (  27.98  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831/V833 are new chips from Allwinner targeting camera market. The
+difference between them is similar to V3s/V3, the former one is a
+reduced-pin package with co-packaged DDR2 and the latter one is a BGA
+package w/o DRAM packaged in.
+
+Add a CCU driver for them. As the user manual didn't have marks for
+different chips (V831 and V833 shares the same user manual file), only
+implementing a full-functional CCU driver with V833 compatible.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+There's a PLL that is called PLL_UNI in the user manual. However a duck
+test shows that it is quite similar to PLL_PERI1 on other SoCs: it
+functions as parent to some peripherals, occupies the same register
+offset with PLL_PERI1 and have the same clock rate configuration with
+PLL_PERI1. Here I called it as pll-uni to follow the official document,
+but I doubt whether we should call it pll-periph1 to be consistent with
+other SoCs.
+
+ drivers/clk/sunxi-ng/Kconfig          |   5 +
+ drivers/clk/sunxi-ng/Makefile         |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v833.c | 930 ++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-v833.h |  46 ++
+ 4 files changed, 982 insertions(+)
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v833.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v833.h
+
+diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
+index ce5f5847d5d3..eb038d0f48d7 100644
+--- a/drivers/clk/sunxi-ng/Kconfig
++++ b/drivers/clk/sunxi-ng/Kconfig
+@@ -77,6 +77,11 @@ config SUN8I_V3S_CCU
+ 	default MACH_SUN8I
+ 	depends on MACH_SUN8I || COMPILE_TEST
+ 
++config SUN8I_V833_CCU
++	bool "Support for the Allwinner V833 CCU"
++	default MACH_SUN8I
++	depends on MACH_SUN8I || COMPILE_TEST
++
+ config SUN8I_DE2_CCU
+ 	bool "Support for the Allwinner SoCs DE2 CCU"
+ 	default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
+index 3eb5cff40eac..dd33aba983bb 100644
+--- a/drivers/clk/sunxi-ng/Makefile
++++ b/drivers/clk/sunxi-ng/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_SUN8I_A33_CCU)	+= ccu-sun8i-a33.o
+ obj-$(CONFIG_SUN8I_A83T_CCU)	+= ccu-sun8i-a83t.o
+ obj-$(CONFIG_SUN8I_H3_CCU)	+= ccu-sun8i-h3.o
+ obj-$(CONFIG_SUN8I_V3S_CCU)	+= ccu-sun8i-v3s.o
++obj-$(CONFIG_SUN8I_V833_CCU)	+= ccu-sun8i-v833.o
+ obj-$(CONFIG_SUN8I_DE2_CCU)	+= ccu-sun8i-de2.o
+ obj-$(CONFIG_SUN8I_R_CCU)	+= ccu-sun8i-r.o
+ obj-$(CONFIG_SUN8I_R40_CCU)	+= ccu-sun8i-r40.o
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v833.c b/drivers/clk/sunxi-ng/ccu-sun8i-v833.c
+new file mode 100644
+index 000000000000..c60178035117
+--- /dev/null
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v833.c
+@@ -0,0 +1,930 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020 Icenowy Zheng <icenowy@aosc.io>
++ * Based on the H616 CCU driver, which is:
++ *   Copyright (c) 2020 Arm Ltd.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++
++#include "ccu_common.h"
++#include "ccu_reset.h"
++
++#include "ccu_div.h"
++#include "ccu_gate.h"
++#include "ccu_mp.h"
++#include "ccu_mult.h"
++#include "ccu_nk.h"
++#include "ccu_nkm.h"
++#include "ccu_nkmp.h"
++#include "ccu_nm.h"
++
++#include "ccu-sun8i-v833.h"
++
++/*
++ * The CPU PLL is actually NP clock, with P being /1, /2 or /4. However
++ * P should only be used for output frequencies lower than 288 MHz.
++ *
++ * For now we can just model it as a multiplier clock, and force P to /1.
++ *
++ * The M factor is present in the register's description, but not in the
++ * frequency formula, and it's documented as "M is only used for backdoor
++ * testing", so it's not modelled and then force to 0.
++ */
++#define SUN8I_V833_PLL_CPUX_REG	0x000
++static struct ccu_mult pll_cpux_clk = {
++	.enable		= BIT(31),
++	.lock		= BIT(28),
++	.mult		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
++	.common		= {
++		.reg		= 0x000,
++		.hw.init	= CLK_HW_INIT("pll-cpux", "osc24M",
++					      &ccu_mult_ops,
++					      CLK_SET_RATE_UNGATE),
++	},
++};
++
++/* Some PLLs are input * N / div1 / P. Model them as NKMP with no K */
++#define SUN8I_V833_PLL_DDR0_REG	0x010
++static struct ccu_nkmp pll_ddr0_clk = {
++	.enable		= BIT(31),
++	.lock		= BIT(28),
++	.n		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
++	.m		= _SUNXI_CCU_DIV(1, 1), /* input divider */
++	.p		= _SUNXI_CCU_DIV(0, 1), /* output divider */
++	.common		= {
++		.reg		= 0x010,
++		.hw.init	= CLK_HW_INIT("pll-ddr0", "osc24M",
++					      &ccu_nkmp_ops,
++					      CLK_SET_RATE_UNGATE),
++	},
++};
++
++#define SUN8I_V833_PLL_PERIPH0_REG	0x020
++static struct ccu_nkmp pll_periph0_clk = {
++	.enable		= BIT(31),
++	.lock		= BIT(28),
++	.n		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
++	.m		= _SUNXI_CCU_DIV(1, 1), /* input divider */
++	.p		= _SUNXI_CCU_DIV(0, 1), /* output divider */
++	.fixed_post_div	= 2,
++	.common		= {
++		.reg		= 0x020,
++		.features	= CCU_FEATURE_FIXED_POSTDIV,
++		.hw.init	= CLK_HW_INIT("pll-periph0", "osc24M",
++					      &ccu_nkmp_ops,
++					      CLK_SET_RATE_UNGATE),
++	},
++};
++
++#define SUN8I_V833_PLL_UNI_REG		0x028
++static struct ccu_nkmp pll_uni_clk = {
++	.enable		= BIT(31),
++	.lock		= BIT(28),
++	.n		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
++	.m		= _SUNXI_CCU_DIV(1, 1), /* input divider */
++	.p		= _SUNXI_CCU_DIV(0, 1), /* output divider */
++	.fixed_post_div	= 2,
++	.common		= {
++		.reg		= 0x028,
++		.features	= CCU_FEATURE_FIXED_POSTDIV,
++		.hw.init	= CLK_HW_INIT("pll-uni", "osc24M",
++					      &ccu_nkmp_ops,
++					      CLK_SET_RATE_UNGATE),
++	},
++};
++
++/*
++ * For Video PLLs, the output divider is described as "used for testing"
++ * in the user manual. So it's not modelled and forced to 0.
++ */
++#define SUN8I_V833_PLL_VIDEO0_REG	0x040
++static struct ccu_nm pll_video0_clk = {
++	.enable		= BIT(31),
++	.lock		= BIT(28),
++	.n		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
++	.m		= _SUNXI_CCU_DIV(1, 1), /* input divider */
++	.fixed_post_div	= 4,
++	.min_rate	= 288000000,
++	.max_rate	= 2400000000UL,
++	.common		= {
++		.reg		= 0x040,
++		.features	= CCU_FEATURE_FIXED_POSTDIV,
++		.hw.init	= CLK_HW_INIT("pll-video0", "osc24M",
++					      &ccu_nm_ops,
++					      CLK_SET_RATE_UNGATE),
++	},
++};
++
++/*
++ * The Audio PLL is supposed to have 3 outputs: 2 fixed factors from
++ * the base (2x and 4x), and one variable divider (the one true pll audio).
++ *
++ * We don't have any need for the variable divider for now, so we just
++ * hardcode it to match with the clock names.
++ */
++#define SUN8I_V833_PLL_AUDIO_REG		0x078
++
++static struct ccu_sdm_setting pll_audio_sdm_table[] = {
++	{ .rate = 541900800, .pattern = 0xc001288d, .m = 1, .n = 22 },
++	{ .rate = 589824000, .pattern = 0xc00126e9, .m = 1, .n = 24 },
++};
++
++static struct ccu_nm pll_audio_base_clk = {
++	.enable		= BIT(31),
++	.lock		= BIT(28),
++	.n		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
++	.m		= _SUNXI_CCU_DIV(1, 1), /* input divider */
++	.sdm		= _SUNXI_CCU_SDM(pll_audio_sdm_table,
++					 BIT(24), 0x178, BIT(31)),
++	.common		= {
++		.features	= CCU_FEATURE_SIGMA_DELTA_MOD,
++		.reg		= 0x078,
++		.hw.init	= CLK_HW_INIT("pll-audio-base", "osc24M",
++					      &ccu_nm_ops,
++					      CLK_SET_RATE_UNGATE),
++	},
++};
++
++#define SUN8I_V833_PLL_CSI_REG		0x0e0
++static struct ccu_nkmp pll_csi_clk = {
++	.enable		= BIT(31),
++	.lock		= BIT(28),
++	.n		= _SUNXI_CCU_MULT_MIN(8, 8, 12),
++	.m		= _SUNXI_CCU_DIV(1, 1), /* input divider */
++	.p		= _SUNXI_CCU_DIV(0, 1), /* output divider */
++	.common		= {
++		.reg		= 0x0e0,
++		.hw.init	= CLK_HW_INIT("pll-csi", "osc24M",
++					      &ccu_nkmp_ops,
++					      CLK_SET_RATE_UNGATE),
++	},
++};
++
++static const char * const cpux_parents[] = { "osc24M", "osc32k",
++					"iosc", "pll-cpux", "pll-periph0" };
++static SUNXI_CCU_MUX(cpux_clk, "cpux", cpux_parents,
++		     0x500, 24, 3, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL);
++static SUNXI_CCU_M(axi_clk, "axi", "cpux", 0x500, 0, 2, 0);
++static struct clk_div_table cpux_apb_div_table[] = {
++	{ .val = 0, .div = 1 },
++	{ .val = 1, .div = 2 },
++	{ .val = 2, .div = 4 },
++	{ .val = 3, .div = 4 },
++	{ /* Sentinel */ },
++};
++static SUNXI_CCU_DIV_TABLE(cpux_apb_clk, "cpux-apb", "cpux",
++			   0x500, 8, 2, cpux_apb_div_table, 0);
++
++static const char * const psi_ahb1_ahb2_parents[] = { "osc24M", "osc32k",
++						      "iosc", "pll-periph0" };
++static SUNXI_CCU_MP_WITH_MUX(psi_ahb1_ahb2_clk, "psi-ahb1-ahb2",
++			     psi_ahb1_ahb2_parents,
++			     0x510,
++			     0, 2,	/* M */
++			     8, 2,	/* P */
++			     24, 2,	/* mux */
++			     0);
++
++static const char * const ahb3_apb1_apb2_parents[] = { "osc24M", "osc32k",
++						       "psi-ahb1-ahb2",
++						       "pll-periph0" };
++static SUNXI_CCU_MP_WITH_MUX(ahb3_clk, "ahb3", ahb3_apb1_apb2_parents, 0x51c,
++			     0, 2,	/* M */
++			     8, 2,	/* P */
++			     24, 2,	/* mux */
++			     0);
++
++static SUNXI_CCU_MP_WITH_MUX(apb1_clk, "apb1", ahb3_apb1_apb2_parents, 0x520,
++			     0, 2,	/* M */
++			     8, 2,	/* P */
++			     24, 2,	/* mux */
++			     0);
++
++static SUNXI_CCU_MP_WITH_MUX(apb2_clk, "apb2", ahb3_apb1_apb2_parents, 0x524,
++			     0, 2,	/* M */
++			     8, 2,	/* P */
++			     24, 2,	/* mux */
++			     0);
++
++static const char * const de_parents[] = { "pll-uni", "pll-uni-2x", "pll-periph0-2x" };
++static SUNXI_CCU_M_WITH_MUX_GATE(de_clk, "de", de_parents, 0x600,
++				       0, 4,	/* M */
++				       24, 1,	/* mux */
++				       BIT(31),	/* gate */
++				       0);
++
++static SUNXI_CCU_GATE(bus_de_clk, "bus-de", "psi-ahb1-ahb2",
++		      0x60c, BIT(0), 0);
++
++static SUNXI_CCU_M_WITH_MUX_GATE(g2d_clk, "g2d", de_parents, 0x630,
++				       0, 4,	/* M */
++				       24, 1,	/* mux */
++				       BIT(31),	/* gate */
++				       0);
++
++static SUNXI_CCU_GATE(bus_g2d_clk, "bus-g2d", "psi-ahb1-ahb2",
++		      0x63c, BIT(0), 0);
++
++static const char * const ce_parents[] = { "osc24M", "pll-periph0-2x" };
++static SUNXI_CCU_MP_WITH_MUX_GATE(ce_clk, "ce", ce_parents, 0x680,
++					0, 4,	/* M */
++					8, 2,	/* N */
++					24, 1,	/* mux */
++					BIT(31),/* gate */
++					0);
++
++static SUNXI_CCU_GATE(bus_ce_clk, "bus-ce", "psi-ahb1-ahb2",
++		      0x68c, BIT(0), 0);
++
++static const char * const ve_eise_parents[] = { "pll-uni", "pll-uni-2x",
++						"pll-periph0", "pll-video0-4x" };
++static SUNXI_CCU_M_WITH_MUX_GATE(ve_clk, "ve", ve_eise_parents, 0x690,
++				       0, 3,	/* M */
++				       24, 2,	/* mux */
++				       BIT(31),	/* gate */
++				       0);
++
++static SUNXI_CCU_GATE(bus_ve_clk, "bus-ve", "psi-ahb1-ahb2",
++		      0x69c, BIT(0), 0);
++
++static SUNXI_CCU_M_WITH_MUX_GATE(eise_clk, "eise", ve_eise_parents, 0x6d0,
++				       0, 3,	/* M */
++				       24, 2,	/* mux */
++				       BIT(31),	/* gate */
++				       0);
++
++static SUNXI_CCU_GATE(bus_eise_clk, "bus-eise", "psi-ahb1-ahb2",
++		      0x6dc, BIT(0), 0);
++
++static const char * const npu_parents[] = { "pll-periph0", "pll-periph0-2x",
++					    "pll-uni", "pll-uni-2x",
++					    "pll-video-4x", "pll-cpu",
++					    "pll-csi" };
++static SUNXI_CCU_M_WITH_MUX_GATE(npu_clk, "npu", npu_parents, 0x6e0,
++				       0, 3,	/* M */
++				       24, 2,	/* mux */
++				       BIT(31),	/* gate */
++				       0);
++
++/*
++ * The bus that NPU is located is not specified on the user manual. Parent
++ * clock here is a guess based on the clock register is among other AHB1
++ * clocks.
++ */
++static SUNXI_CCU_GATE(bus_npu_clk, "bus-npu", "psi-ahb1-ahb2",
++		      0x6ec, BIT(0), 0);
++
++static SUNXI_CCU_GATE(bus_dma_clk, "bus-dma", "psi-ahb1-ahb2",
++		      0x70c, BIT(0), 0);
++
++static SUNXI_CCU_GATE(bus_hstimer_clk, "bus-hstimer", "psi-ahb1-ahb2",
++		      0x73c, BIT(0), 0);
++
++static SUNXI_CCU_GATE(avs_clk, "avs", "osc24M", 0x740, BIT(31), 0);
++
++static SUNXI_CCU_GATE(bus_dbg_clk, "bus-dbg", "psi-ahb1-ahb2",
++		      0x78c, BIT(0), 0);
++
++static SUNXI_CCU_GATE(bus_psi_clk, "bus-psi", "psi-ahb1-ahb2",
++		      0x79c, BIT(0), 0);
++
++static SUNXI_CCU_GATE(bus_pwm_clk, "bus-pwm", "apb1", 0x7ac, BIT(0), 0);
++
++/*
++ * BSP kernel declares an IOMMU bus gate at 0x7bc, however the user manual
++ * does not mention it. By trying to poke registers, even if 0x7bc is 0,
++ * the IOMMU registers are accessible.
++ */
++
++static const char * const dram_parents[] = { "pll-ddr0", "pll-periph0-2x" };
++static struct ccu_div dram_clk = {
++	.div		= _SUNXI_CCU_DIV(0, 2),
++	.mux		= _SUNXI_CCU_MUX(24, 2),
++	.common	= {
++		.reg		= 0x800,
++		.hw.init	= CLK_HW_INIT_PARENTS("dram",
++						      dram_parents,
++						      &ccu_div_ops,
++						      CLK_IS_CRITICAL),
++	},
++};
++
++static SUNXI_CCU_GATE(mbus_dma_clk, "mbus-dma", "psi-ahb1-ahb2",
++		      0x804, BIT(0), 0);
++static SUNXI_CCU_GATE(mbus_ve_clk, "mbus-ve", "psi-ahb1-ahb2",
++		      0x804, BIT(1), 0);
++static SUNXI_CCU_GATE(mbus_ce_clk, "mbus-ce", "psi-ahb1-ahb2",
++		      0x804, BIT(2), 0);
++static SUNXI_CCU_GATE(mbus_ts_clk, "mbus-csi", "psi-ahb1-ahb2",
++		      0x804, BIT(8), 0);
++static SUNXI_CCU_GATE(mbus_nand_clk, "mbus-isp", "psi-ahb1-ahb2",
++		      0x804, BIT(9), 0);
++static SUNXI_CCU_GATE(mbus_g2d_clk, "mbus-g2d", "psi-ahb1-ahb2",
++		      0x804, BIT(10), 0);
++static SUNXI_CCU_GATE(mbus_eise_clk, "mbus-eise", "psi-ahb1-ahb2",
++		      0x804, BIT(23), 0);
++static SUNXI_CCU_GATE(mbus_vdpo_clk, "mbus-vdpo", "psi-ahb1-ahb2",
++		      0x804, BIT(27), 0);
++
++static SUNXI_CCU_GATE(bus_dram_clk, "bus-dram", "psi-ahb1-ahb2",
++		      0x80c, BIT(0), CLK_IS_CRITICAL);
++
++static const char * const mmc_parents[] = { "osc24M", "pll-periph0-2x",
++					    "pll-uni-2x" };
++static SUNXI_CCU_MP_WITH_MUX_GATE_POSTDIV(mmc0_clk, "mmc0", mmc_parents, 0x830,
++					  0, 4,		/* M */
++					  8, 2,		/* N */
++					  24, 2,	/* mux */
++					  BIT(31),	/* gate */
++					  2,		/* post-div */
++					  0);
++
++static SUNXI_CCU_MP_WITH_MUX_GATE_POSTDIV(mmc1_clk, "mmc1", mmc_parents, 0x834,
++					  0, 4,		/* M */
++					  8, 2,		/* N */
++					  24, 2,	/* mux */
++					  BIT(31),	/* gate */
++					  2,		/* post-div */
++					  0);
++
++static SUNXI_CCU_MP_WITH_MUX_GATE_POSTDIV(mmc2_clk, "mmc2", mmc_parents, 0x838,
++					  0, 4,		/* M */
++					  8, 2,		/* N */
++					  24, 2,	/* mux */
++					  BIT(31),	/* gate */
++					  2,		/* post-div */
++					  0);
++
++static SUNXI_CCU_GATE(bus_mmc0_clk, "bus-mmc0", "ahb3", 0x84c, BIT(0), 0);
++static SUNXI_CCU_GATE(bus_mmc1_clk, "bus-mmc1", "ahb3", 0x84c, BIT(1), 0);
++static SUNXI_CCU_GATE(bus_mmc2_clk, "bus-mmc2", "ahb3", 0x84c, BIT(2), 0);
++
++static SUNXI_CCU_GATE(bus_uart0_clk, "bus-uart0", "apb2", 0x90c, BIT(0), 0);
++static SUNXI_CCU_GATE(bus_uart1_clk, "bus-uart1", "apb2", 0x90c, BIT(1), 0);
++static SUNXI_CCU_GATE(bus_uart2_clk, "bus-uart2", "apb2", 0x90c, BIT(2), 0);
++static SUNXI_CCU_GATE(bus_uart3_clk, "bus-uart3", "apb2", 0x90c, BIT(3), 0);
++
++static SUNXI_CCU_GATE(bus_i2c0_clk, "bus-i2c0", "apb2", 0x91c, BIT(0), 0);
++static SUNXI_CCU_GATE(bus_i2c1_clk, "bus-i2c1", "apb2", 0x91c, BIT(1), 0);
++static SUNXI_CCU_GATE(bus_i2c2_clk, "bus-i2c2", "apb2", 0x91c, BIT(2), 0);
++static SUNXI_CCU_GATE(bus_i2c3_clk, "bus-i2c3", "apb2", 0x91c, BIT(3), 0);
++
++static const char * const spi_parents[] = { "osc24M", "pll-periph0",
++					    "pll-uni", "pll-periph0-2x",
++					    "pll-uni-2x" };
++
++static SUNXI_CCU_MP_WITH_MUX_GATE(spi0_clk, "spi0", spi_parents, 0x940,
++					0, 4,	/* M */
++					8, 2,	/* N */
++					24, 3,	/* mux */
++					BIT(31),/* gate */
++					0);
++
++static SUNXI_CCU_MP_WITH_MUX_GATE(spi1_clk, "spi1", spi_parents, 0x944,
++					0, 4,	/* M */
++					8, 2,	/* N */
++					24, 3,	/* mux */
++					BIT(31),/* gate */
++					0);
++
++static SUNXI_CCU_MP_WITH_MUX_GATE(spi2_clk, "spi2", spi_parents, 0x948,
++					0, 4,	/* M */
++					8, 2,	/* N */
++					24, 3,	/* mux */
++					BIT(31),/* gate */
++					0);
++
++static SUNXI_CCU_GATE(bus_spi0_clk, "bus-spi0", "ahb3", 0x96c, BIT(0), 0);
++static SUNXI_CCU_GATE(bus_spi1_clk, "bus-spi1", "ahb3", 0x96c, BIT(1), 0);
++static SUNXI_CCU_GATE(bus_spi2_clk, "bus-spi2", "ahb3", 0x96c, BIT(2), 0);
++
++static SUNXI_CCU_GATE(emac_25m_clk, "emac-25m", "ahb3", 0x970,
++		      BIT(31) | BIT(30), 0);
++
++static SUNXI_CCU_GATE(bus_emac0_clk, "bus-emac0", "ahb3", 0x97c, BIT(0), 0);
++
++static SUNXI_CCU_GATE(bus_gpadc_clk, "bus-gpadc", "apb1", 0x9ec, BIT(0), 0);
++
++static SUNXI_CCU_GATE(bus_ths_clk, "bus-ths", "apb1", 0x9fc, BIT(0), 0);
++
++static const char * const audio_parents[] = { "pll-audio", "pll-audio-2x",
++					      "pll-audio-4x" };
++static struct ccu_div i2s0_clk = {
++	.enable		= BIT(31),
++	.div		= _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
++	.mux		= _SUNXI_CCU_MUX(24, 2),
++	.common		= {
++		.reg		= 0xa10,
++		.hw.init	= CLK_HW_INIT_PARENTS("i2s0",
++						      audio_parents,
++						      &ccu_div_ops,
++						      CLK_SET_RATE_PARENT),
++	},
++};
++
++static struct ccu_div i2s1_clk = {
++	.enable		= BIT(31),
++	.div		= _SUNXI_CCU_DIV_FLAGS(8, 2, CLK_DIVIDER_POWER_OF_TWO),
++	.mux		= _SUNXI_CCU_MUX(24, 2),
++	.common		= {
++		.reg		= 0xa14,
++		.hw.init	= CLK_HW_INIT_PARENTS("i2s1",
++						      audio_parents,
++						      &ccu_div_ops,
++						      CLK_SET_RATE_PARENT),
++	},
++};
++
++static SUNXI_CCU_GATE(bus_i2s0_clk, "bus-i2s0", "apb1", 0xa2c, BIT(0), 0);
++static SUNXI_CCU_GATE(bus_i2s1_clk, "bus-i2s1", "apb1", 0xa2c, BIT(1), 0);
++
++static SUNXI_CCU_M_WITH_MUX_GATE(audio_codec_1x_clk, "audio-codec-1x",
++				 audio_parents, 0xa50,
++				 0, 4,	/* M */
++				 24, 2,	/* mux */
++				 BIT(31),	/* gate */
++				 CLK_SET_RATE_PARENT);
++static SUNXI_CCU_M_WITH_MUX_GATE(audio_codec_4x_clk, "audio-codec-4x",
++				 audio_parents, 0xa54,
++				 0, 4,	/* M */
++				 24, 2,	/* mux */
++				 BIT(31),	/* gate */
++				 CLK_SET_RATE_PARENT);
++
++static SUNXI_CCU_GATE(bus_audio_codec_clk, "bus-audio-codec", "apb1", 0xa5c,
++		BIT(0), 0);
++
++/*
++ * There are OHCI 12M clock source selection bits for the USB 2.0 port.
++ * We will force them to 0 (12M divided from 48M).
++ */
++#define SUN8I_V833_USB0_CLK_REG		0xa70
++
++static SUNXI_CCU_GATE(usb_ohci0_clk, "usb-ohci0", "osc12M", 0xa70, BIT(31), 0);
++static SUNXI_CCU_GATE(usb_phy0_clk, "usb-phy0", "osc24M", 0xa70, BIT(29), 0);
++
++static SUNXI_CCU_GATE(bus_ohci0_clk, "bus-ohci0", "ahb3", 0xa8c, BIT(0), 0);
++static SUNXI_CCU_GATE(bus_ehci0_clk, "bus-ehci0", "ahb3", 0xa8c, BIT(4), 0);
++static SUNXI_CCU_GATE(bus_otg_clk, "bus-otg", "ahb3", 0xa8c, BIT(8), 0);
++
++static const char * const mipi_dsi_dphy0_hs_parents[] = { "pll-video0",
++						      "pll-video0-4x" };
++static SUNXI_CCU_MP_WITH_MUX_GATE(mipi_dsi_dphy0_hs_clk, "mipi-dsi-dphy0-hs",
++				  mipi_dsi_dphy0_hs_parents,
++				  0xb20,
++				  0, 4,		/* M */
++				  8, 2,		/* N */
++				  24, 3,	/* mux */
++				  BIT(31),	/* gate */
++				  0);
++
++static const char * const mipi_dsi_host0_parents[] = { "pll-periph0",
++						       "pll-periph0-4x",
++						       "osc24M" };
++static SUNXI_CCU_M_WITH_MUX_GATE(mipi_dsi_host0_clk, "mipi-dsi-host0",
++				 mipi_dsi_host0_parents,
++				 0xb24,
++				 0, 4,		/* M */
++				 24, 2,		/* mux */
++				 BIT(31),	/* gate */
++				 0);
++
++static SUNXI_CCU_GATE(bus_mipi_dsi_clk, "bus-mipi-dsi", "ahb3", 0xb4c, BIT(0), 0);
++
++static SUNXI_CCU_GATE(bus_tcon_top_clk, "bus-tcon-top", "ahb3",
++		      0xb5c, BIT(0), 0);
++
++static const char * const tcon_lcd0_parents[] = { "pll-video0",
++						  "pll-video0-4x" };
++static SUNXI_CCU_MUX_WITH_GATE(tcon_lcd0_clk, "tcon-lcd0",
++			       tcon_lcd0_parents, 0xb60,
++			       24, 3,	/* mux */
++			       BIT(31),	/* gate */
++			       CLK_SET_RATE_PARENT);
++
++static SUNXI_CCU_GATE(bus_tcon_lcd0_clk, "bus-tcon-lcd0", "ahb3",
++		      0xb7c, BIT(0), 0);
++
++static const char * const csi_top_parents[] = { "pll-uni", "pll-uni-2x",
++						"pll-periph0", "pll-periph0-2x",
++						"pll-video0-4x", "pll-csi" };
++static SUNXI_CCU_M_WITH_MUX_GATE(csi_top_clk, "csi-top",
++				 csi_top_parents, 0xc04,
++				 0, 5,		/* M */
++				 24, 3,		/* mux */
++				 BIT(31),	/* gate */
++				 0);
++
++static const char * const csi_mclk_parents[] = { "osc24M", "pll-uni",
++						 "pll-uni-2x", "pll-periph0",
++						 "pll-periph0-2x", "pll-video0",
++						 "pll-csi" };
++
++static SUNXI_CCU_M_WITH_MUX_GATE(csi_mclk0_clk, "csi-mclk0",
++				 csi_mclk_parents, 0xc08,
++				 0, 5,		/* M */
++				 24, 3,		/* mux */
++				 BIT(31),	/* gate */
++				 0);
++
++static SUNXI_CCU_M_WITH_MUX_GATE(csi_mclk1_clk, "csi-mclk1",
++				 csi_mclk_parents, 0xc0c,
++				 0, 5,		/* M */
++				 24, 3,		/* mux */
++				 BIT(31),	/* gate */
++				 0);
++
++static const char * const isp_parents[] = { "pll-uni", "pll-uni-2x",
++					    "pll-periph0", "pll-video0-4x",
++					    "pll-csi" };
++static SUNXI_CCU_M_WITH_MUX_GATE(isp_clk, "isp",
++				 isp_parents, 0xc20,
++				 0, 5,		/* M */
++				 24, 3,		/* mux */
++				 BIT(31),	/* gate */
++				 0);
++
++static SUNXI_CCU_GATE(bus_csi_clk, "bus-csi", "ahb3", 0xc2c, BIT(0), 0);
++
++static const char * const dspo_parents[] = { "pll-video0", "pll-video0-4x",
++					     "pll-periph0", "pll-periph0-2x",
++					     "pll-uni", "pll-uni-2x",
++					     "pll-csi" };
++static SUNXI_CCU_MP_WITH_MUX(dspo_clk, "dspo",
++			     dspo_parents,
++			     0xc60,
++			     0, 2,	/* M */
++			     8, 2,	/* P */
++			     24, 2,	/* mux */
++			     0);
++
++static SUNXI_CCU_GATE(bus_dspo_clk, "bus-dspo", "ahb3", 0xc6c, BIT(0), 0);
++
++/* Fixed factor clocks */
++static CLK_FIXED_FACTOR_FW_NAME(osc12M_clk, "osc12M", "hosc", 2, 1, 0);
++
++static const struct clk_hw *clk_parent_pll_audio[] = {
++	&pll_audio_base_clk.common.hw
++};
++
++/*
++ * The divider of pll-audio is fixed to 24 for now, so 24576000 and 22579200
++ * rates can be set exactly in conjunction with sigma-delta modulation.
++ */
++static CLK_FIXED_FACTOR_HWS(pll_audio_clk, "pll-audio",
++			    clk_parent_pll_audio,
++			    24, 1, CLK_SET_RATE_PARENT);
++static CLK_FIXED_FACTOR_HWS(pll_audio_2x_clk, "pll-audio-2x",
++			    clk_parent_pll_audio,
++			    4, 1, CLK_SET_RATE_PARENT);
++static CLK_FIXED_FACTOR_HWS(pll_audio_4x_clk, "pll-audio-4x",
++			    clk_parent_pll_audio,
++			    2, 1, CLK_SET_RATE_PARENT);
++
++static const struct clk_hw *pll_periph0_parents[] = {
++	&pll_periph0_clk.common.hw
++};
++
++static CLK_FIXED_FACTOR_HWS(pll_periph0_2x_clk, "pll-periph0-2x",
++			    pll_periph0_parents,
++			    1, 2, 0);
++
++static const struct clk_hw *pll_uni_parents[] = {
++	&pll_uni_clk.common.hw
++};
++
++static CLK_FIXED_FACTOR_HWS(pll_uni_2x_clk, "pll-uni-2x",
++			    pll_uni_parents,
++			    1, 2, 0);
++
++static CLK_FIXED_FACTOR_HW(pll_video0_4x_clk, "pll-video0-4x",
++			   &pll_video0_clk.common.hw,
++			   1, 4, CLK_SET_RATE_PARENT);
++
++static struct ccu_common *sun8i_v833_ccu_clks[] = {
++	&pll_cpux_clk.common,
++	&pll_ddr0_clk.common,
++	&pll_periph0_clk.common,
++	&pll_uni_clk.common,
++	&pll_video0_clk.common,
++	&pll_audio_base_clk.common,
++	&pll_csi_clk.common,
++	&cpux_clk.common,
++	&axi_clk.common,
++	&cpux_apb_clk.common,
++	&psi_ahb1_ahb2_clk.common,
++	&ahb3_clk.common,
++	&apb1_clk.common,
++	&apb2_clk.common,
++	&de_clk.common,
++	&bus_de_clk.common,
++	&g2d_clk.common,
++	&bus_g2d_clk.common,
++	&ce_clk.common,
++	&bus_ce_clk.common,
++	&ve_clk.common,
++	&bus_ve_clk.common,
++	&eise_clk.common,
++	&bus_eise_clk.common,
++	&npu_clk.common,
++	&bus_npu_clk.common,
++	&bus_dma_clk.common,
++	&bus_hstimer_clk.common,
++	&avs_clk.common,
++	&bus_dbg_clk.common,
++	&bus_psi_clk.common,
++	&bus_pwm_clk.common,
++	&dram_clk.common,
++	&mbus_dma_clk.common,
++	&mbus_ve_clk.common,
++	&mbus_ce_clk.common,
++	&mbus_ts_clk.common,
++	&mbus_nand_clk.common,
++	&mbus_g2d_clk.common,
++	&mbus_eise_clk.common,
++	&mbus_vdpo_clk.common,
++	&bus_dram_clk.common,
++	&mmc0_clk.common,
++	&mmc1_clk.common,
++	&mmc2_clk.common,
++	&bus_mmc0_clk.common,
++	&bus_mmc1_clk.common,
++	&bus_mmc2_clk.common,
++	&bus_uart0_clk.common,
++	&bus_uart1_clk.common,
++	&bus_uart2_clk.common,
++	&bus_uart3_clk.common,
++	&bus_i2c0_clk.common,
++	&bus_i2c1_clk.common,
++	&bus_i2c2_clk.common,
++	&bus_i2c3_clk.common,
++	&spi0_clk.common,
++	&spi1_clk.common,
++	&spi2_clk.common,
++	&bus_spi0_clk.common,
++	&bus_spi1_clk.common,
++	&bus_spi2_clk.common,
++	&emac_25m_clk.common,
++	&bus_emac0_clk.common,
++	&bus_gpadc_clk.common,
++	&bus_ths_clk.common,
++	&i2s0_clk.common,
++	&i2s1_clk.common,
++	&bus_i2s0_clk.common,
++	&bus_i2s1_clk.common,
++	&audio_codec_1x_clk.common,
++	&audio_codec_4x_clk.common,
++	&bus_audio_codec_clk.common,
++	&usb_ohci0_clk.common,
++	&usb_phy0_clk.common,
++	&bus_ohci0_clk.common,
++	&bus_ehci0_clk.common,
++	&bus_otg_clk.common,
++	&mipi_dsi_dphy0_hs_clk.common,
++	&mipi_dsi_host0_clk.common,
++	&bus_mipi_dsi_clk.common,
++	&bus_tcon_top_clk.common,
++	&tcon_lcd0_clk.common,
++	&bus_tcon_lcd0_clk.common,
++	&csi_top_clk.common,
++	&csi_mclk0_clk.common,
++	&csi_mclk1_clk.common,
++	&isp_clk.common,
++	&bus_csi_clk.common,
++	&dspo_clk.common,
++	&bus_dspo_clk.common,
++};
++
++static struct clk_hw_onecell_data sun8i_v833_hw_clks = {
++	.hws	= {
++		[CLK_OSC12M]		= &osc12M_clk.hw,
++		[CLK_PLL_CPUX]		= &pll_cpux_clk.common.hw,
++		[CLK_PLL_DDR0]		= &pll_ddr0_clk.common.hw,
++		[CLK_PLL_PERIPH0]	= &pll_periph0_clk.common.hw,
++		[CLK_PLL_PERIPH0_2X]	= &pll_periph0_2x_clk.hw,
++		[CLK_PLL_UNI]		= &pll_uni_clk.common.hw,
++		[CLK_PLL_UNI_2X]	= &pll_uni_2x_clk.hw,
++		[CLK_PLL_VIDEO0]	= &pll_video0_clk.common.hw,
++		[CLK_PLL_VIDEO0_4X]	= &pll_video0_4x_clk.hw,
++		[CLK_PLL_AUDIO_BASE]	= &pll_audio_base_clk.common.hw,
++		[CLK_PLL_AUDIO]		= &pll_audio_clk.hw,
++		[CLK_PLL_AUDIO_2X]	= &pll_audio_2x_clk.hw,
++		[CLK_PLL_AUDIO_4X]	= &pll_audio_4x_clk.hw,
++		[CLK_PLL_CSI]		= &pll_csi_clk.common.hw,
++		[CLK_CPUX]		= &cpux_clk.common.hw,
++		[CLK_AXI]		= &axi_clk.common.hw,
++		[CLK_CPUX_APB]		= &cpux_apb_clk.common.hw,
++		[CLK_PSI_AHB1_AHB2]	= &psi_ahb1_ahb2_clk.common.hw,
++		[CLK_AHB3]		= &ahb3_clk.common.hw,
++		[CLK_APB1]		= &apb1_clk.common.hw,
++		[CLK_APB2]		= &apb2_clk.common.hw,
++		[CLK_DE]		= &de_clk.common.hw,
++		[CLK_BUS_DE]		= &bus_de_clk.common.hw,
++		[CLK_G2D]		= &g2d_clk.common.hw,
++		[CLK_BUS_G2D]		= &bus_g2d_clk.common.hw,
++		[CLK_CE]		= &ce_clk.common.hw,
++		[CLK_BUS_CE]		= &bus_ce_clk.common.hw,
++		[CLK_VE]		= &ve_clk.common.hw,
++		[CLK_BUS_VE]		= &bus_ve_clk.common.hw,
++		[CLK_EISE]		= &eise_clk.common.hw,
++		[CLK_BUS_EISE]		= &bus_eise_clk.common.hw,
++		[CLK_NPU]		= &npu_clk.common.hw,
++		[CLK_BUS_NPU]		= &bus_npu_clk.common.hw,
++		[CLK_BUS_DMA]		= &bus_dma_clk.common.hw,
++		[CLK_BUS_HSTIMER]	= &bus_hstimer_clk.common.hw,
++		[CLK_AVS]		= &avs_clk.common.hw,
++		[CLK_BUS_DBG]		= &bus_dbg_clk.common.hw,
++		[CLK_BUS_PSI]		= &bus_psi_clk.common.hw,
++		[CLK_BUS_PWM]		= &bus_pwm_clk.common.hw,
++		[CLK_DRAM]		= &dram_clk.common.hw,
++		[CLK_MBUS_DMA]		= &mbus_dma_clk.common.hw,
++		[CLK_MBUS_VE]		= &mbus_ve_clk.common.hw,
++		[CLK_MBUS_CE]		= &mbus_ce_clk.common.hw,
++		[CLK_MBUS_TS]		= &mbus_ts_clk.common.hw,
++		[CLK_MBUS_NAND]		= &mbus_nand_clk.common.hw,
++		[CLK_MBUS_G2D]		= &mbus_g2d_clk.common.hw,
++		[CLK_MBUS_EISE]		= &mbus_eise_clk.common.hw,
++		[CLK_MBUS_VDPO]		= &mbus_vdpo_clk.common.hw,
++		[CLK_BUS_DRAM]		= &bus_dram_clk.common.hw,
++		[CLK_MMC0]		= &mmc0_clk.common.hw,
++		[CLK_MMC1]		= &mmc1_clk.common.hw,
++		[CLK_MMC2]		= &mmc2_clk.common.hw,
++		[CLK_BUS_MMC0]		= &bus_mmc0_clk.common.hw,
++		[CLK_BUS_MMC1]		= &bus_mmc1_clk.common.hw,
++		[CLK_BUS_MMC2]		= &bus_mmc2_clk.common.hw,
++		[CLK_BUS_UART0]		= &bus_uart0_clk.common.hw,
++		[CLK_BUS_UART1]		= &bus_uart1_clk.common.hw,
++		[CLK_BUS_UART2]		= &bus_uart2_clk.common.hw,
++		[CLK_BUS_UART3]		= &bus_uart3_clk.common.hw,
++		[CLK_BUS_I2C0]		= &bus_i2c0_clk.common.hw,
++		[CLK_BUS_I2C1]		= &bus_i2c1_clk.common.hw,
++		[CLK_BUS_I2C2]		= &bus_i2c2_clk.common.hw,
++		[CLK_BUS_I2C3]		= &bus_i2c3_clk.common.hw,
++		[CLK_SPI0]		= &spi0_clk.common.hw,
++		[CLK_SPI1]		= &spi1_clk.common.hw,
++		[CLK_SPI2]		= &spi2_clk.common.hw,
++		[CLK_BUS_SPI0]		= &bus_spi0_clk.common.hw,
++		[CLK_BUS_SPI1]		= &bus_spi1_clk.common.hw,
++		[CLK_BUS_SPI2]		= &bus_spi2_clk.common.hw,
++		[CLK_EMAC_25M]		= &emac_25m_clk.common.hw,
++		[CLK_BUS_EMAC0]		= &bus_emac0_clk.common.hw,
++		[CLK_BUS_GPADC]		= &bus_gpadc_clk.common.hw,
++		[CLK_BUS_THS]		= &bus_ths_clk.common.hw,
++		[CLK_I2S0]		= &i2s0_clk.common.hw,
++		[CLK_I2S1]		= &i2s1_clk.common.hw,
++		[CLK_BUS_I2S0]		= &bus_i2s0_clk.common.hw,
++		[CLK_BUS_I2S1]		= &bus_i2s1_clk.common.hw,
++		[CLK_AUDIO_CODEC_1X]	= &audio_codec_1x_clk.common.hw,
++		[CLK_AUDIO_CODEC_4X]	= &audio_codec_4x_clk.common.hw,
++		[CLK_BUS_AUDIO_CODEC]	= &bus_audio_codec_clk.common.hw,
++		[CLK_USB_OHCI0]		= &usb_ohci0_clk.common.hw,
++		[CLK_USB_PHY0]		= &usb_phy0_clk.common.hw,
++		[CLK_BUS_OHCI0]		= &bus_ohci0_clk.common.hw,
++		[CLK_BUS_EHCI0]		= &bus_ehci0_clk.common.hw,
++		[CLK_BUS_OTG]		= &bus_otg_clk.common.hw,
++		[CLK_MIPI_DSI_DPHY0_HS]	= &mipi_dsi_dphy0_hs_clk.common.hw,
++		[CLK_MIPI_DSI_HOST0]	= &mipi_dsi_host0_clk.common.hw,
++		[CLK_BUS_MIPI_DSI]	= &bus_mipi_dsi_clk.common.hw,
++		[CLK_BUS_TCON_TOP]	= &bus_tcon_top_clk.common.hw,
++		[CLK_TCON_LCD0]		= &tcon_lcd0_clk.common.hw,
++		[CLK_BUS_TCON_LCD0]	= &bus_tcon_lcd0_clk.common.hw,
++		[CLK_CSI_TOP]		= &csi_top_clk.common.hw,
++		[CLK_CSI_MCLK0]		= &csi_mclk0_clk.common.hw,
++		[CLK_CSI_MCLK1]		= &csi_mclk1_clk.common.hw,
++		[CLK_ISP]		= &isp_clk.common.hw,
++		[CLK_BUS_CSI]		= &bus_csi_clk.common.hw,
++		[CLK_DSPO]		= &dspo_clk.common.hw,
++		[CLK_BUS_DSPO]		= &bus_dspo_clk.common.hw,
++	},
++	.num = CLK_NUMBER,
++};
++
++static struct ccu_reset_map sun8i_v833_ccu_resets[] = {
++	[RST_MBUS]		= { 0x540, BIT(30) },
++
++	[RST_BUS_DE]		= { 0x60c, BIT(16) },
++	[RST_BUS_G2D]		= { 0x63c, BIT(16) },
++	[RST_BUS_CE]		= { 0x68c, BIT(16) },
++	[RST_BUS_VE]		= { 0x69c, BIT(16) },
++	[RST_BUS_EISE]		= { 0x6dc, BIT(16) },
++	[RST_BUS_NPU]		= { 0x6ec, BIT(16) },
++	[RST_BUS_DMA]		= { 0x70c, BIT(16) },
++	[RST_BUS_HSTIMER]	= { 0x73c, BIT(16) },
++	[RST_BUS_DBG]		= { 0x78c, BIT(16) },
++	[RST_BUS_PSI]		= { 0x79c, BIT(16) },
++	[RST_BUS_PWM]		= { 0x7ac, BIT(16) },
++	[RST_BUS_DRAM]		= { 0x70c, BIT(16) },
++	[RST_BUS_MMC0]		= { 0x84c, BIT(16) },
++	[RST_BUS_MMC1]		= { 0x84c, BIT(17) },
++	[RST_BUS_MMC2]		= { 0x84c, BIT(18) },
++	[RST_BUS_UART0]		= { 0x90c, BIT(16) },
++	[RST_BUS_UART1]		= { 0x90c, BIT(17) },
++	[RST_BUS_UART2]		= { 0x90c, BIT(18) },
++	[RST_BUS_UART3]		= { 0x90c, BIT(19) },
++	[RST_BUS_I2C0]		= { 0x91c, BIT(16) },
++	[RST_BUS_I2C1]		= { 0x91c, BIT(17) },
++	[RST_BUS_I2C2]		= { 0x91c, BIT(18) },
++	[RST_BUS_I2C3]		= { 0x91c, BIT(19) },
++	[RST_BUS_SPI0]		= { 0x96c, BIT(16) },
++	[RST_BUS_SPI1]		= { 0x96c, BIT(17) },
++	[RST_BUS_SPI2]		= { 0x96c, BIT(18) },
++	[RST_BUS_EMAC0]		= { 0x97c, BIT(16) },
++	[RST_BUS_GPADC]		= { 0x9ec, BIT(16) },
++	[RST_BUS_THS]		= { 0x9fc, BIT(16) },
++	[RST_BUS_I2S0]		= { 0xa2c, BIT(16) },
++	[RST_BUS_I2S1]		= { 0xa2c, BIT(17) },
++	[RST_BUS_AUDIO_CODEC]	= { 0xa5c, BIT(16) },
++
++	[RST_USB_PHY0]		= { 0xa70, BIT(30) },
++
++	[RST_BUS_OHCI0]		= { 0xa8c, BIT(16) },
++	[RST_BUS_EHCI0]		= { 0xa8c, BIT(20) },
++	[RST_BUS_OTG]		= { 0xa8c, BIT(24) },
++	[RST_BUS_MIPI_DSI]	= { 0xb4c, BIT(16) },
++	[RST_BUS_TCON_TOP]	= { 0xb5c, BIT(16) },
++	[RST_BUS_TCON_LCD0]	= { 0xb7c, BIT(16) },
++	[RST_BUS_CSI]		= { 0xc2c, BIT(16) },
++	[RST_BUS_DSPO]		= { 0xc6c, BIT(16) },
++};
++
++static const struct sunxi_ccu_desc sun8i_v833_ccu_desc = {
++	.ccu_clks	= sun8i_v833_ccu_clks,
++	.num_ccu_clks	= ARRAY_SIZE(sun8i_v833_ccu_clks),
++
++	.hw_clks	= &sun8i_v833_hw_clks,
++
++	.resets		= sun8i_v833_ccu_resets,
++	.num_resets	= ARRAY_SIZE(sun8i_v833_ccu_resets),
++};
++
++static const u32 pll_regs[] = {
++	SUN8I_V833_PLL_CPUX_REG,
++	SUN8I_V833_PLL_DDR0_REG,
++	SUN8I_V833_PLL_PERIPH0_REG,
++	SUN8I_V833_PLL_UNI_REG,
++	SUN8I_V833_PLL_VIDEO0_REG,
++	SUN8I_V833_PLL_AUDIO_REG,
++	SUN8I_V833_PLL_CSI_REG,
++};
++
++static const u32 pll_video_regs[] = {
++	SUN8I_V833_PLL_VIDEO0_REG,
++};
++
++static void __init sun8i_v833_ccu_setup(struct device_node *node)
++{
++	void __iomem *reg;
++	u32 val;
++	int i;
++
++	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
++	if (IS_ERR(reg)) {
++		pr_err("%pOF: Could not map clock registers\n", node);
++		return;
++	}
++
++	/* Enable the lock bits and the output enable bits on all PLLs */
++	for (i = 0; i < ARRAY_SIZE(pll_regs); i++) {
++		val = readl(reg + pll_regs[i]);
++		val |= BIT(29) | BIT(27);
++		writel(val, reg + pll_regs[i]);
++	}
++
++	/*
++	 * Force the output divider of pll-video0 to 0.
++	 *
++	 * See the comment before its definition for the reason.
++	 */
++	val = readl(reg + SUN8I_V833_PLL_VIDEO0_REG);
++	val &= ~BIT(0);
++	writel(val, reg + SUN8I_V833_PLL_VIDEO0_REG);
++
++	/*
++	 * Force OHCI 12M clock sources to 00 (12MHz divided from 48MHz)
++	 *
++	 * This clock mux is still mysterious, and the code just enforces
++	 * it to have a valid clock parent.
++	 */
++	val = readl(reg + SUN8I_V833_USB0_CLK_REG);
++	val &= ~GENMASK(25, 24);
++	writel(val, reg + SUN8I_V833_USB0_CLK_REG);
++
++	/*
++	 * Force the post-divider of pll-audio to 12 and the output divider
++	 * of it to 2, so 24576000 and 22579200 rates can be set exactly.
++	 */
++	val = readl(reg + SUN8I_V833_PLL_AUDIO_REG);
++	val &= ~(GENMASK(21, 16) | BIT(0));
++	writel(val | (11 << 16) | BIT(0), reg + SUN8I_V833_PLL_AUDIO_REG);
++
++	i = sunxi_ccu_probe(node, reg, &sun8i_v833_ccu_desc);
++	if (i)
++		pr_err("%pOF: probing clocks fails: %d\n", node, i);
++}
++
++CLK_OF_DECLARE(sun8i_v833_ccu, "allwinner,sun8i-v833-ccu",
++	       sun8i_v833_ccu_setup);
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v833.h b/drivers/clk/sunxi-ng/ccu-sun8i-v833.h
+new file mode 100644
+index 000000000000..75188c446ac6
+--- /dev/null
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v833.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2020 Icenowy Zheng <icenowy@aosc.io>
++ */
++
++#ifndef _CCU_SUN8I_V833_H_
++#define _CCU_SUN8I_V833_H_
++
++#include <dt-bindings/clock/sun8i-v833-ccu.h>
++#include <dt-bindings/reset/sun8i-v833-ccu.h>
++
++#define CLK_OSC12M		0
++#define CLK_PLL_CPUX		1
++#define CLK_PLL_DDR0		2
++#define CLK_PLL_PERIPH0		3
++#define CLK_PLL_PERIPH0_2X	4
++#define CLK_PLL_UNI		5
++#define CLK_PLL_UNI_2X		6
++#define CLK_PLL_VIDEO0		7
++#define CLK_PLL_VIDEO0_4X	8
++#define CLK_PLL_AUDIO_BASE	9
++#define CLK_PLL_AUDIO		10
++#define CLK_PLL_AUDIO_2X	11
++#define CLK_PLL_AUDIO_4X	12
++#define CLK_PLL_CSI		13
++
++/* CPUX clock exported for DVFS */
++
++#define CLK_AXI			15
++#define CLK_CPUX_APB		16
++#define CLK_PSI_AHB1_AHB2	17
++#define CLK_AHB3		18
++
++/* APB1 clock exported for PIO */
++
++#define CLK_APB2		20
++
++/* All module clocks and bus gates are exported except DRAM */
++
++#define CLK_DRAM		39
++
++#define CLK_BUS_DRAM		48
++
++#define CLK_NUMBER		(CLK_BUS_DSPO + 1)
++
++#endif /* _CCU_SUN8I_V833_H_ */
+
+From patchwork Sat Dec 12 04:04:22 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969879
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2A0C433FE
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:06:04 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 4B67F23106
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:06:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 4B67F23106
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=wSwTWy9c2H94O1uM72epSoT4ax4U4HLlBYLPmxhwl1U=; b=VtllVZSnHEHXg7SeCcvBn3fCM
+	erfV/9yJcLL38fZsLnPJGXVNIyO1eFTwl+jHwIfBKVA3qe+ubO0ioJ/Bf7kDkOXioOwqmvgbgyjYY
+	uJe6x5Sy+OJ+7RsBDGBkz5dAtBTUIbNw53AhAPyM1IgpKsTJur/wzDEPeQ36JxvkuDUhmLUw8SjxK
+	n523ZTxjAMMXe9fGwWDTDioJmKhFggXPWEOraEVwJjU2oEx0xQesF+7Z/hOT5spJbsKusG9oPSEMl
+	n9w1oSo4Ld/kLHatdlTfzGtwTk/KVuKPW5o8ovG5pIxk/kYPCKwLMBtJAhnM0jaVyi5JH8/efHMec
+	zVTRtRLqw==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knw9P-0000Pk-12; Sat, 12 Dec 2020 04:04:55 +0000
+Received: from relay1.mymailcheap.com ([149.56.97.132])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knw9L-0000OF-AT
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 04:04:52 +0000
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com
+ [149.56.130.247])
+ by relay1.mymailcheap.com (Postfix) with ESMTPS id 155F03F201;
+ Sat, 12 Dec 2020 04:04:50 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+ by filter1.mymailcheap.com (Postfix) with ESMTP id EF9702A36D;
+ Fri, 11 Dec 2020 23:04:49 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607745890;
+ bh=mx2OOV0nH7TzIRFvuDsyycaMn/Mk7SixEXWdS4pOG0Q=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=uFs3KsoJ88+mgfllVByFsQyRaRvZldy06a7hyOR8XwhtcomZOH6VDIy0xLfYCeQCa
+ 9I0PiTJdT0vhPGgFu9eqwVs/+jTien8LaaC8AjRwKgVKlZ2MueDfDY2znREp64RUE0
+ AHuMlvdW8Uir6wdVDwtml8OqhkuoBIfLx4BgG/cY=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+ by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id jrZLTLLnP2sR; Fri, 11 Dec 2020 23:04:49 -0500 (EST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter1.mymailcheap.com (Postfix) with ESMTPS;
+ Fri, 11 Dec 2020 23:04:49 -0500 (EST)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id 16D7642F46;
+ Sat, 12 Dec 2020 04:04:48 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="TyJYZXxJ";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 73FDC42F46;
+ Sat, 12 Dec 2020 04:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607745880; bh=mx2OOV0nH7TzIRFvuDsyycaMn/Mk7SixEXWdS4pOG0Q=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=TyJYZXxJ7WdgOzO+tNfpgeTJoLqO4DJBx9wDuixX2Apky16n549d8RjxvhJ0vlCtM
+ 3cHNNDs5wdAyHVnfbaPmry0MLaGINjc0YjKk8OSb5IL1Q4uA9y8kUGnZmXo/JfnWZH
+ Cf8MnwHZZlHsH/0j47uR2fz3OfeuLakFHsc6FEuU=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 04/12] dt-bindings: pinctrl: sunxi: add compatible for
+ V831/V833 pinctrl
+Date: Sat, 12 Dec 2020 12:04:22 +0800
+Message-Id: <20201212040430.3640418-1-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; ARC_NA(0.00)[];
+ RCVD_VIA_SMTP_AUTH(0.00)[];
+ R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all:c];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[213.133.102.83];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[10];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
+X-Rspamd-Queue-Id: 16D7642F46
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201211_230451_500602_662752D6 
+X-CRM114-Status: GOOD (  13.71  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831/V833 are a pair of new Allwinner chips. The difference between them
+is similar to V3s/V3, but the chip design is similar to newer Allwinner
+chips started from H6.
+
+Add compatible strings for V831/V833 pinctrl.
+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml         | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+index 5240487dfe50..3d6855856594 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+@@ -44,6 +44,8 @@ properties:
+       - allwinner,sun8i-r40-pinctrl
+       - allwinner,sun8i-v3-pinctrl
+       - allwinner,sun8i-v3s-pinctrl
++      - allwinner,sun8i-v831-pinctrl
++      - allwinner,sun8i-v833-pinctrl
+       - allwinner,sun9i-a80-pinctrl
+       - allwinner,sun9i-a80-r-pinctrl
+       - allwinner,sun50i-a64-pinctrl
+@@ -189,6 +191,8 @@ allOf:
+           enum:
+             - allwinner,sun8i-a23-pinctrl
+             - allwinner,sun8i-a83t-pinctrl
++            - allwinner,sun8i-v831-pinctrl
++            - allwinner,sun8i-v833-pinctrl
+             - allwinner,sun50i-a64-pinctrl
+             - allwinner,sun50i-h5-pinctrl
+             - allwinner,suniv-f1c100s-pinctrl
+
+From patchwork Sat Dec 12 04:04:23 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969881
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3066C4361B
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:06:24 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 876F123106
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:06:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 876F123106
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=yujPHyKVgacVfm2uGK3wUazyY562cG9z/fK2jrcvYeM=; b=knEJ0tTZN7zIN1t3Bk95ru2iI
+	3p8r0FqfphfMFa1qZbLvuhlq0CbBooyI0Tq1Min/UbJqNHYYf+hfTtQ5Zzz4uLIKeTM1aJnTELXIU
+	d0brOImpCNb3CE679WM1NYHbt/PI2O7z3w8y1Wc0SWaS6t83dBuuBEYaIzdXK3yuX8SlyzUAdj9Bg
+	6oYoIKlQiu6rXXmKrjztPmO4CGWUUaVKz2cqvZEp3yHCP0fZ8KO9Dlqf5betOElA6V0pJA7kTSLws
+	icNCavqaw0mwA6vdFWmTD9LHzb5D+zptqgWq4TP4HAQ32/67hwb0mi8BNPxic+7T9iJEO7W8xrzZs
+	TnrzP9X0w==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knw9a-0000TO-C2; Sat, 12 Dec 2020 04:05:06 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knw9Y-0000Sr-Vk
+ for linux-arm-kernel@merlin.infradead.org; Sat, 12 Dec 2020 04:05:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+ References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+ Content-Type:Content-ID:Content-Description;
+ bh=/PomYAS/aZyzthfKIHgwmhSdTrkgL2bpd2AP3qqQ6xk=; b=LOS386rAPirpASvTAIGIDtZybd
+ uLFJYCps4qrnUteuoPvJtado2sYOp7AfQS1ioVTWz1WqRRyfmEhUiHKZQrtg1RpBP5oZ8nYl+bDcr
+ kTP218KyP4Igw2ZrOQL/Sx5IN95CT/ti7Zrore9jCqltz9piocpBfk/cVp2TabSxg0Uop1lTjiqDN
+ RtmwE60vKWxJGPOZmcxfKWNwSgT6Sou97cVDBLK1IW+ksNPCoLHEFNU+MC/f51+byjQLQGnG8oDGt
+ nJOZtjuSTiWT/G5VYaTqpXzIjGdNh3DydxcvcY7I4Nga3pIU+j/ybjFF90JvZbDvf03trXckNvUAx
+ 5f2W9QJg==;
+Received: from relay3.mymailcheap.com ([217.182.66.161])
+ by casper.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knw9T-0002jm-8P
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 04:05:03 +0000
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com
+ [149.56.130.247])
+ by relay3.mymailcheap.com (Postfix) with ESMTPS id 424FF3F1CC;
+ Sat, 12 Dec 2020 05:04:52 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter1.mymailcheap.com (Postfix) with ESMTP id 6D7402A36D;
+ Fri, 11 Dec 2020 23:04:51 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607745891;
+ bh=WmDb+uM4073hllkNp+eTnA6s8fc0doHBTnhAEU5xHgw=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=yGLo7nsODoiSUB8fPlH2PmdInMHDjfmYvoon+O7Ssn46Zz/opQRVfLb16ASu5a0U7
+ sFEh6IwlWlTsN5TpnJpzaTnN99PjYoBgOy2FTKCJobJLxAuvUYA8MOBp8KlCnTGMYR
+ nAHiU1o9uGCbPndKLjlBttgVljHVkLORb6JLtdy0=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+ by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id koYpZiTmXclG; Fri, 11 Dec 2020 23:04:49 -0500 (EST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter1.mymailcheap.com (Postfix) with ESMTPS;
+ Fri, 11 Dec 2020 23:04:49 -0500 (EST)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id 97A0742F58;
+ Sat, 12 Dec 2020 04:04:48 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="cLV6NLnu";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id A6EF042F46;
+ Sat, 12 Dec 2020 04:04:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607745885; bh=WmDb+uM4073hllkNp+eTnA6s8fc0doHBTnhAEU5xHgw=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=cLV6NLnuGnPrjV4ivASJdYofOF/1zAFLej73QA8NTC6En9a9owe6XCoIWJ7rVn8xQ
+ s7SujygB6jdLRtiZumYwJdnG4/1TJZWRaZAn8sYvPDgLdziGuqi/ygMFfAE7RRcQ3m
+ B4y72zJaOwQY9M8PLLin+FVwjPG2vMMrJ7xi5OHI=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 05/12] pinctrl: sunxi: add pinctrl driver for V831/V833
+Date: Sat, 12 Dec 2020 12:04:23 +0800
+Message-Id: <20201212040430.3640418-2-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; ARC_NA(0.00)[];
+ RCVD_VIA_SMTP_AUTH(0.00)[];
+ R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all:c];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[213.133.102.83];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[10];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
+X-Rspamd-Queue-Id: 97A0742F58
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201212_040459_435159_234F19E9 
+X-CRM114-Status: GOOD (  18.64  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831/V833 are new chips from Allwinner. They're the same die with
+different package.
+
+Add a pinctrl driver for them.
+
+The difference between V831/V833 pinctrl is implemented based on the
+user manual.
+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ drivers/pinctrl/sunxi/Kconfig              |   5 +
+ drivers/pinctrl/sunxi/Makefile             |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v83x.c | 743 +++++++++++++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h      |   2 +
+ 4 files changed, 751 insertions(+)
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-v83x.c
+
+diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+index 593293584ecc..fc13335a3eda 100644
+--- a/drivers/pinctrl/sunxi/Kconfig
++++ b/drivers/pinctrl/sunxi/Kconfig
+@@ -73,6 +73,11 @@ config PINCTRL_SUN8I_V3S
+ 	default MACH_SUN8I
+ 	select PINCTRL_SUNXI
+ 
++config PINCTRL_SUN8I_V83X
++	bool "Support for the Allwinner V831/V833 PIO"
++	default MACH_SUN8I
++	select PINCTRL_SUNXI
++
+ config PINCTRL_SUN9I_A80
+ 	bool "Support for the Allwinner A80 PIO"
+ 	default MACH_SUN9I
+diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
+index 8b7ff0dc3bdf..8bcca109e942 100644
+--- a/drivers/pinctrl/sunxi/Makefile
++++ b/drivers/pinctrl/sunxi/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A83T_R)	+= pinctrl-sun8i-a83t-r.o
+ obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
+ obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
+ obj-$(CONFIG_PINCTRL_SUN8I_V3S)		+= pinctrl-sun8i-v3s.o
++obj-$(CONFIG_PINCTRL_SUN8I_V83X)	+= pinctrl-sun8i-v83x.o
+ obj-$(CONFIG_PINCTRL_SUN50I_H5)		+= pinctrl-sun50i-h5.o
+ obj-$(CONFIG_PINCTRL_SUN50I_H6)		+= pinctrl-sun50i-h6.o
+ obj-$(CONFIG_PINCTRL_SUN50I_H6_R)	+= pinctrl-sun50i-h6-r.o
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v83x.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v83x.c
+new file mode 100644
+index 000000000000..19d035dcebbf
+--- /dev/null
++++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v83x.c
+@@ -0,0 +1,743 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Icenowy Zheng <icenowy@aosc.io>
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/pinctrl/pinctrl.h>
++
++#include "pinctrl-sunxi.h"
++
++static const struct sunxi_desc_pin sun8i_v83x_pins[] = {
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 0),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_VARIANT(0x3,
++					 "mmc2",	/* DS */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x4, "spi0"),		/* CLK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_VARIANT(0x3,
++					 "mmc2",	/* RST */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x4, "spi0"),		/* CS0 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 2),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_VARIANT(0x3,
++					 "mmc2",	/* CLK */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x4, "spi0"),		/* MOSI */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 3),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_VARIANT(0x3,
++					 "mmc2",	/* CMD */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x4, "spi0"),		/* MISO */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 4),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_VARIANT(0x3,
++					 "mmc2",	/* WP */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x4, "spi0"),		/* D3 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(C, 5),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_VARIANT(0x3,
++					 "mmc2",	/* HOLD */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x4, "spi0"),		/* D4 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(C, 6),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x3, "mmc2"),		/* D0 */
++			  SUNXI_FUNCTION(0x4, "spi0"),		/* CS1 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(C, 7),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x3, "mmc2"),		/* D5 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(C, 8),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x3, "mmc2"),		/* D1 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(C, 9),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x3, "mmc2"),		/* D6 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(C, 10),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x3, "mmc2"),		/* D2 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(C, 11),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x3, "mmc2"),		/* D7 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 11)),
++	/* Hole */
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 0),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D2 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 0)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* D3 */
++		  SUNXI_FUNCTION(0x3, "pwm"),		/* 0 */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* D0 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD1 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 1)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 2),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* D4 */
++		  SUNXI_FUNCTION(0x3, "pwm"),		/* 1 */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* D1 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD0 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 2)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 3),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* D5 */
++		  SUNXI_FUNCTION(0x3, "pwm"),		/* 2 */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* D2 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* CRS_DV */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 3)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 4),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* D6 */
++		  SUNXI_FUNCTION(0x3, "pwm"),		/* 3 */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* D3 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXER */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 4)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 5),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* D7 */
++		  SUNXI_FUNCTION(0x3, "pwm"),		/* 4 */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* D4 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD1 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 5)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 6),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* D10 */
++		  SUNXI_FUNCTION(0x3, "pwm"),		/* 5 */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* D5 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD0 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 6)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 7),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* D11 */
++		  SUNXI_FUNCTION(0x3, "pwm"),		/* 6 */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* D6 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXCK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 7)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 8),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* D12 */
++		  SUNXI_FUNCTION(0x3, "pwm"),		/* 7 */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* D7 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXEN */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 8)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 9),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D13 */
++			  SUNXI_FUNCTION(0x3, "pwm"),		/* 8 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 9)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 10),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D14 */
++			  SUNXI_FUNCTION(0x3, "i2s1"),		/* MCLK */
++			  SUNXI_FUNCTION(0x4, "vo"),		/* D8 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 10)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 11),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D15 */
++			  SUNXI_FUNCTION(0x3, "i2s1"),		/* BCLK */
++			  SUNXI_FUNCTION(0x4, "vo"),		/* D9 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 11)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 12),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D18 */
++			  SUNXI_FUNCTION(0x3, "i2s1"),		/* LRCK */
++			  SUNXI_FUNCTION(0x4, "vo"),		/* D10 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 12)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 13),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D19 */
++			  SUNXI_FUNCTION(0x3, "i2s1"),		/* DOUT0 */
++			  SUNXI_FUNCTION(0x4, "vo"),		/* D11 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 13)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 14),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D20 */
++			  SUNXI_FUNCTION(0x3, "i2s1_out"),	/* DOUT1 */
++			  SUNXI_FUNCTION(0x4, "vo"),		/* D11 */
++			  SUNXI_FUNCTION(0x5, "i2s1_in"),	/* DIN1 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 14)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 15),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D21 */
++			  SUNXI_FUNCTION(0x3, "i2s1_out"),	/* DOUT2 */
++			  SUNXI_FUNCTION(0x4, "vo"),		/* D13 */
++			  SUNXI_FUNCTION(0x5, "i2s1_in"),	/* DIN2 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 15)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 16),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D22 */
++			  SUNXI_FUNCTION(0x3, "i2s1_out"),	/* DOUT3 */
++			  SUNXI_FUNCTION(0x4, "vo"),		/* D14 */
++			  SUNXI_FUNCTION(0x5, "i2s1_in"),	/* DIN3 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 16)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 17),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "lcd"),		/* D23 */
++			  SUNXI_FUNCTION(0x3, "i2s1"),		/* DIN0 */
++			  SUNXI_FUNCTION(0x4, "vo"),		/* D15 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 17)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 18),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* CLK */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* CLK */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* EPHY_25M */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 18)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 19),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* DE */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* FIELD */
++		  SUNXI_FUNCTION(0x5, "tcon_trig"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 19)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 20),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* HSYNC */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* HSYNC */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* MDC */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 20)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 21),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "lcd"),		/* VSYNC */
++		  SUNXI_FUNCTION(0x4, "vo"),		/* VSYNC */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* MDIO */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 21)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(D, 22),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "pwm"),		/* 9 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 22)),
++	/* Hole */
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 0),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* PCLK */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* RXD3 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 0)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 1),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* MCLK */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* RXD2 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 1)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 2),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* HSYNC */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* RXD1 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 2)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 3),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* VSYNC */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* RXD0 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 3)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 4),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D0 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* RXCK */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 4)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 5),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D1 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* RXCTL */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 5)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 6),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D2 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* CLKIN */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 6)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 7),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D3 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* TXD3 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 7)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 8),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D4 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* TXD2 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 8)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 9),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D5 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* TXD1 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 9)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 10),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D6 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* TXD0 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 10)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 11),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D7 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* TXCK */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 11)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 12),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D8 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* TXCTL */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 12)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 13),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D9 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* MDC */
++			  SUNXI_FUNCTION(0x5, "i2c1"),		/* SCK */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 13)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 14),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D10 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* MDIO */
++			  SUNXI_FUNCTION(0x5, "i2c1"),		/* SDA */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 14)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 15),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1_data"),	/* D11 */
++			  SUNXI_FUNCTION(0x3, "emac"),		/* EPHY_25M */
++			  SUNXI_FUNCTION(0x3, "csi1_field"),
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 15)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 16),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_VARIANT(0x3,
++					 "lcd",		/* D0 */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x5, "i2c0"),		/* SCK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 16)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 17),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_VARIANT(0x3,
++					 "lcd",		/* D1 */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x5, "i2c0"),		/* SDA */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 17)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 18),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D12 */
++			  SUNXI_FUNCTION(0x3, "lcd"),		/* D8 */
++			  SUNXI_FUNCTION(0x4, "spi2"),		/* CLK */
++			  SUNXI_FUNCTION(0x5, "uart2"),		/* TX */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 18)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 19),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D13 */
++			  SUNXI_FUNCTION(0x3, "lcd"),		/* D9 */
++			  SUNXI_FUNCTION(0x4, "spi2"),		/* MOSI */
++			  SUNXI_FUNCTION(0x5, "uart2"),		/* RX */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 19)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 20),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D14 */
++			  SUNXI_FUNCTION(0x3, "lcd"),		/* D16 */
++			  SUNXI_FUNCTION(0x4, "spi2"),		/* MISO */
++			  SUNXI_FUNCTION(0x5, "uart2"),		/* RTS */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 20)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(E, 21),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x2, "csi1"),		/* D15 */
++			  SUNXI_FUNCTION(0x3, "lcd"),		/* D17 */
++			  SUNXI_FUNCTION(0x4, "spi2"),		/* CS0 */
++			  SUNXI_FUNCTION(0x5, "uart2"),		/* CTS */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 2, 21)),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 0),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc0"),		/* D1 */
++		  SUNXI_FUNCTION(0x3, "jtag"),		/* MS */
++		  SUNXI_FUNCTION(0x5, "cpu_bist0"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 0)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc0"),		/* D0 */
++		  SUNXI_FUNCTION(0x3, "jtag"),		/* DI */
++		  SUNXI_FUNCTION(0x5, "cpu_bist1"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 1)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 2),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc0"),		/* CLK */
++		  SUNXI_FUNCTION(0x3, "uart0"),		/* TX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 2)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 3),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc0"),		/* CMD */
++		  SUNXI_FUNCTION(0x3, "jtag"),		/* DO */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 3)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 4),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc0"),		/* D3 */
++		  SUNXI_FUNCTION(0x3, "uart0"),		/* RX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 4)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 5),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc0"),		/* D2 */
++		  SUNXI_FUNCTION(0x3, "jtag"),		/* CK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 5)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 6),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 3, 6)),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 0),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc1"),		/* CLK */
++		  SUNXI_FUNCTION(0x5, "uart3"),		/* TX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 0)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc1"),		/* CMD */
++		  SUNXI_FUNCTION(0x5, "uart3"),		/* RX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 1)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 2),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc1"),		/* D0 */
++		  SUNXI_FUNCTION(0x5, "uart3"),		/* CTS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 2)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 3),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc1"),		/* D1 */
++		  SUNXI_FUNCTION(0x5, "uart3"),		/* RTS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 3)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 4),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc1"),		/* D2 */
++		  SUNXI_FUNCTION(0x5, "uart1"),		/* RTS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 4)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 5),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "mmc1"),		/* D3 */
++		  SUNXI_FUNCTION(0x5, "uart1"),		/* CTS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 5)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 6),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x5, "uart1"),		/* TX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 6)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 7),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x5, "uart1"),		/* RX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 4, 7)),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 0),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 0 */
++		  SUNXI_FUNCTION(0x3, "i2s0"),		/* MCLK */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* CLK */
++		  SUNXI_FUNCTION(0x5, "uart3"),		/* TX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 0)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 1 */
++		  SUNXI_FUNCTION(0x3, "i2s0"),		/* BCLK */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* MOSI */
++		  SUNXI_FUNCTION(0x5, "uart3"),		/* RX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 1)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 2 */
++		  SUNXI_FUNCTION(0x3, "i2s0"),		/* LRCK */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* MISO */
++		  SUNXI_FUNCTION(0x5, "uart3"),		/* CTS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 2)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 3 */
++		  SUNXI_FUNCTION(0x3, "i2s0"),		/* DOUT */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* CS0 */
++		  SUNXI_FUNCTION(0x5, "uart3"),		/* RTS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 3)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 4 */
++		  SUNXI_FUNCTION(0x3, "i2s0"),		/* DIN */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* CS1 */
++		  SUNXI_FUNCTION(0x5, "w1"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 4)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 5 */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* RXD1 */
++		  SUNXI_FUNCTION(0x4, "i2c2"),		/* SCK */
++		  SUNXI_FUNCTION(0x5, "uart2"),		/* TX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 5)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 6 */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* RXD0 */
++		  SUNXI_FUNCTION(0x4, "i2c2"),		/* SDA */
++		  SUNXI_FUNCTION(0x5, "uart2"),		/* RX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 6)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 7 */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* CRS_DV */
++		  SUNXI_FUNCTION(0x4, "uart0"),		/* TX */
++		  SUNXI_FUNCTION(0x5, "uart2"),		/* RTS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 7)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 8 */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* RXER */
++		  SUNXI_FUNCTION(0x4, "uart0"),		/* RX */
++		  SUNXI_FUNCTION(0x5, "uart2"),		/* CTS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 8)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 9),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "pwm"),		/* 9 */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* TXD1 */
++		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SCK */
++		  SUNXI_FUNCTION(0x5, "uart0"),		/* TX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 9)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "emac"),		/* TXD0 */
++		  SUNXI_FUNCTION(0x4, "i2c3"),		/* SDA */
++		  SUNXI_FUNCTION(0x5, "uart0"),		/* RX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 10)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "jtag"),		/* MS */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* TXCK */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* CLK */
++		  SUNXI_FUNCTION(0x5, "i2c2"),		/* SCK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 11)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 12),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "jtag"),		/* CK */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* TXEN */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* MOSI */
++		  SUNXI_FUNCTION(0x5, "i2c2"),		/* SDA */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 12)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 13),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "jtag"),		/* DO */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* MDC */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* MISO */
++		  SUNXI_FUNCTION(0x5, "i2c3"),		/* SCK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 13)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 14),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "jtag"),		/* DI */
++		  SUNXI_FUNCTION(0x3, "emac"),		/* MDIO */
++		  SUNXI_FUNCTION(0x4, "spi1"),		/* CS0 */
++		  SUNXI_FUNCTION(0x5, "i2c3"),		/* SDA */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 14)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(H, 15),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x3, "emac"),		/* EPHY_25M */
++			  SUNXI_FUNCTION(0x4, "spi1"),		/* CS1 */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 5, 15)),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(I, 0),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "csi0"),		/* MCLK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 0)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(I, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "csi0"),		/* SM_HS */
++		  SUNXI_FUNCTION_VARIANT(0x4,
++					 "spi2",	/* CLK */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x5, "i2c1"),		/* SCK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 1)),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(I, 2),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "csi0"),		/* SM_VS */
++		  SUNXI_FUNCTION(0x3, "tcon_trig"),
++		  SUNXI_FUNCTION_VARIANT(0x4,
++					 "spi2",	/* MOSI */
++					 PINCTRL_SUN8I_V833),
++		  SUNXI_FUNCTION(0x5, "i2c1"),		/* SDA */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 2)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(I, 3),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x4, "spi3"),		/* MISO */
++			  SUNXI_FUNCTION(0x5, "i2c0"),		/* SCK */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 3)),
++	SUNXI_PIN_VARIANT(SUNXI_PINCTRL_PIN(I, 4),
++			  PINCTRL_SUN8I_V833,
++			  SUNXI_FUNCTION(0x0, "gpio_in"),
++			  SUNXI_FUNCTION(0x1, "gpio_out"),
++			  SUNXI_FUNCTION(0x4, "spi3"),		/* CS0 */
++			  SUNXI_FUNCTION(0x5, "i2c0"),		/* SDA */
++			  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 4)),
++};
++
++static const unsigned int sun8i_v83x_pinctrl_irq_bank_map[] = { 2, 3, 4, 5, 6, 7, 8 };
++
++static const struct sunxi_pinctrl_desc sun8i_v83x_pinctrl_data = {
++	.pins = sun8i_v83x_pins,
++	.npins = ARRAY_SIZE(sun8i_v83x_pins),
++	.irq_banks = 7,
++	.irq_bank_map = sun8i_v83x_pinctrl_irq_bank_map,
++	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
++};
++
++static int sun8i_v83x_pinctrl_probe(struct platform_device *pdev)
++{
++	unsigned long variant = (unsigned long)of_device_get_match_data(&pdev->dev);
++
++	return sunxi_pinctrl_init_with_variant(pdev, &sun8i_v83x_pinctrl_data,
++					       variant);
++}
++
++static const struct of_device_id sun8i_v83x_pinctrl_match[] = {
++	{
++		.compatible = "allwinner,sun8i-v831-pinctrl",
++		.data = (void *)PINCTRL_SUN8I_V831
++	},
++	{
++		.compatible = "allwinner,sun8i-v833-pinctrl",
++		.data = (void *)PINCTRL_SUN8I_V833
++	},
++	{ },
++};
++
++static struct platform_driver sun8i_v83x_pinctrl_driver = {
++	.probe	= sun8i_v83x_pinctrl_probe,
++	.driver	= {
++		.name		= "sun8i-v83x-pinctrl",
++		.of_match_table	= sun8i_v83x_pinctrl_match,
++	},
++};
++builtin_platform_driver(sun8i_v83x_pinctrl_driver);
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index a32bb5bcb754..b3b157dfc510 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -96,6 +96,8 @@
+ #define PINCTRL_SUN8I_R40	BIT(8)
+ #define PINCTRL_SUN8I_V3	BIT(9)
+ #define PINCTRL_SUN8I_V3S	BIT(10)
++#define PINCTRL_SUN8I_V831	BIT(11)
++#define PINCTRL_SUN8I_V833	BIT(12)
+ 
+ #define PIO_POW_MOD_SEL_REG	0x340
+ 
+
+From patchwork Sat Dec 12 04:06:35 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969883
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F255FC433FE
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:08:23 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id A384F23406
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:08:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org A384F23406
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=ggs9RJK/OZ+SnKKMsgKgcYRgEsKP00Z5lejg8bs3fKE=; b=PEDPuVjQZGD9xxbYQRL8OUhAl
+	nLzCcEtpIvGliq6nKXYbog6EX5x6z67n9BbtTcXseiMoV3nzKHCj6UP67JYrILyEL+pzR0rMqREP6
+	rSNRiGQ0USQGJzltVER2uNr62xYj8RGtEkTNfPzEExtKs7a8if8BUL9cP7kp8L0VVbHdD8+o62yDC
+	Ai8OGEsFq80j4dL3BKObJU7YqCS78/hTLNZWe9VVBq1D+fZdFrP2qAGRA8ZRniIJ2XpjdtxVJKxKB
+	CTYEvRqqVtxmH900G0z0ulLAmgFXlRhhBsk4kNUkxdpssKu1ToNXe9k6h/cs5TxFKi9lX2o4Qy7KO
+	rM2TE5u/w==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knwBg-00014o-TU; Sat, 12 Dec 2020 04:07:16 +0000
+Received: from relay2.mymailcheap.com ([217.182.66.162])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knwBd-00013y-SH
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 04:07:14 +0000
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com
+ [149.56.130.247])
+ by relay2.mymailcheap.com (Postfix) with ESMTPS id A6A793EDEC;
+ Sat, 12 Dec 2020 05:07:12 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter1.mymailcheap.com (Postfix) with ESMTP id CE8622A379;
+ Fri, 11 Dec 2020 23:07:11 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607746031;
+ bh=gDO5k6b18EjcbaZ2hywXumGArL1RdQqigFycWfjiF58=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=AbbbDWNn6hc+2MCzliGgTRmWF4tr1FOr28crGs7rsC8z6jYJAPcQxD7nxFYRJKaHx
+ p8eM57eFgDzoRT4SsxHiWn+ZLxBon1mPK43ok2JGXtpyttkNw96iNh7jZqiiyJI8ci
+ RAWBs1fCoJlAV2L0+YPrw3Bn/mKzENcntIDcVMp8=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+ by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 6Z5x-mb0Xop7; Fri, 11 Dec 2020 23:07:10 -0500 (EST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter1.mymailcheap.com (Postfix) with ESMTPS;
+ Fri, 11 Dec 2020 23:07:10 -0500 (EST)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id E03E242F57;
+ Sat, 12 Dec 2020 04:07:09 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="gBZ8Fsve";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 2FE1F42F46;
+ Sat, 12 Dec 2020 04:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607746019; bh=gDO5k6b18EjcbaZ2hywXumGArL1RdQqigFycWfjiF58=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=gBZ8FsveqqsxVLM11AParQhAvpse0YB9weUknRlUs9jOv+WynSIySSvb+DjekNxkZ
+ qBtOj4UjSJFL0R8LGfqmX3JKOXSI7c1PMLPw/vx/FBZsoYgqc2vIUEkQtdkAaNPDpv
+ 0GYP3IXO5i7iBjNjMxfauALnMEN+/tzW0b635dr0=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 06/12] dt-bindings: rtc: sun6i: add compatible string for
+ V831/V833 RTC
+Date: Sat, 12 Dec 2020 12:06:35 +0800
+Message-Id: <20201212040641.3640916-1-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; ARC_NA(0.00)[];
+ RCVD_VIA_SMTP_AUTH(0.00)[];
+ R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all:c];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[213.133.102.83];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[11];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
+X-Rspamd-Queue-Id: E03E242F57
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201211_230714_138429_F091FDB4 
+X-CRM114-Status: GOOD (  14.79  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831/V833 SoCs (the same die) have a RTC block similar to the one in H6,
+but allow to generate the osc32k clock from osc24M.
+
+Add a new compatible string for that.
+
+The functionality of dividing osc24M to generate osc32k is still TODO.
+
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ .../devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml        | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+index 37c2a601c3fa..6e3a3b14db7b 100644
+--- a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+@@ -21,6 +21,7 @@ properties:
+       - const: allwinner,sun8i-h3-rtc
+       - const: allwinner,sun8i-r40-rtc
+       - const: allwinner,sun8i-v3-rtc
++      - const: allwinner,sun8i-v831-rtc
+       - const: allwinner,sun50i-h5-rtc
+       - items:
+           - const: allwinner,sun50i-a64-rtc
+@@ -97,6 +98,7 @@ allOf:
+       properties:
+         compatible:
+           contains:
++            const: allwinner,sun8i-v831-rtc
+             const: allwinner,sun50i-h6-rtc
+ 
+     then:
+
+From patchwork Sat Dec 12 04:09:15 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969885
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C42C433FE
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:11:03 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 8E1172313E
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 04:11:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 8E1172313E
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=z8SIXz3D9bs/Dj6GlpdeeSnzgOXKUGiRQ3bmHI93c+0=; b=Eo2DQnfQMIiipdX2Mw0Mo7VRM
+	H8f4wsB4/qW+LkFJwjQPAG+rzE1pWu8qdIlyD2GUBisWsLgCY+dNlSsA1gIvSmWQDQ220yi5TwgoN
+	kM6M7wzBAfBuJNjOiRVE59JY2ZFvwa1wKC1mdHgRu7QKjnZhBwZ/WGkV3jd679K49LeWj3mGltldJ
+	VbrMswjj5RISVEqHZ6EmMrAvu+xqSMPxxW7Ngu0/DphBAI6c09SJYr4lm7SD2C5EQZ9SAakxbQaWW
+	by38GT8b8+seoYhZHWOlRLJE8zmrlEO9z5v53cZLn1VK5JVk+/FVhfy5APbu8mhN7vvJEk61xckjf
+	mUMABvXDg==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knwE8-0001b1-G6; Sat, 12 Dec 2020 04:09:48 +0000
+Received: from relay1.mymailcheap.com ([149.56.97.132])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knwE4-0001aO-Pe
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 04:09:46 +0000
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com
+ [91.134.140.82])
+ by relay1.mymailcheap.com (Postfix) with ESMTPS id A0E363F201;
+ Sat, 12 Dec 2020 04:09:42 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+ by filter2.mymailcheap.com (Postfix) with ESMTP id E7EAA2A5BB;
+ Sat, 12 Dec 2020 05:09:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607746181;
+ bh=Ejlr4Vm/N68eETmbOxG/1yGC/FJ3CF8ukBOHzwwwHeg=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=igSK+3ji+/2GxwURmInGkGLqmM0JLhwIF0NRu/RvXtecFioj6v1qgyOMY7O+IOo/0
+ DaahuoHa17vLw3afqLd0a7D1pw5U7z28KmdeAu5uYaS9D2tRRzsdX37OuJgIxtkREU
+ vDeBrEcaxWPhKC5XDMc3ayaxMVbOYpcsu8zMi+IQ=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+ by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id hbEjwtp11xE1; Sat, 12 Dec 2020 05:09:40 +0100 (CET)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter2.mymailcheap.com (Postfix) with ESMTPS;
+ Sat, 12 Dec 2020 05:09:40 +0100 (CET)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id DC69742F46;
+ Sat, 12 Dec 2020 04:09:39 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="ASvGa6UJ";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 0EE2C42F46;
+ Sat, 12 Dec 2020 04:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607746170; bh=Ejlr4Vm/N68eETmbOxG/1yGC/FJ3CF8ukBOHzwwwHeg=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=ASvGa6UJ92ZDg1fWTkAd8xbPBtRo0Qox3JKP9Y1Q0pqdZy00CeXJfaU+ZBJmuyHgw
+ 4UyGG6fWWnt2faihHYNjEyx8etmZgLefUitpkzVlgIFkYI6PQ4U5Z0sz7Ml0WA6KoU
+ aEOearHalD+r7VhDOB/6JSDNu7S1s86DSjPe3a0U=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 07/12] rtc: sun6i: add compatible string for V831/V833 RTC
+Date: Sat, 12 Dec 2020 12:09:15 +0800
+Message-Id: <20201212040920.3641480-1-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; RCVD_VIA_SMTP_AUTH(0.00)[];
+ ARC_NA(0.00)[]; R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[148.251.23.173];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[11];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Queue-Id: DC69742F46
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201211_230944_894548_C1A231AB 
+X-CRM114-Status: GOOD (  17.87  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+These chips share the same die, and the RTC block is similar to H6
+one, but with functionality of dividing 24M clock to get 32k (useful for
+32k clock output).
+
+Add compatible string for it. The special clock divider is TODO.
+
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ drivers/rtc/rtc-sun6i.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+index e2b8b150bcb4..c9a1f2319f92 100644
+--- a/drivers/rtc/rtc-sun6i.c
++++ b/drivers/rtc/rtc-sun6i.c
+@@ -378,6 +378,23 @@ static void __init sun50i_h6_rtc_clk_init(struct device_node *node)
+ CLK_OF_DECLARE_DRIVER(sun50i_h6_rtc_clk, "allwinner,sun50i-h6-rtc",
+ 		      sun50i_h6_rtc_clk_init);
+ 
++static const struct sun6i_rtc_clk_data sun8i_v831_rtc_data = {
++	.rc_osc_rate = 16000000,
++	.fixed_prescaler = 32,
++	.has_prescaler = 1,
++	.has_out_clk = 1,
++	.export_iosc = 1,
++	.has_losc_en = 1,
++	.has_auto_swt = 1,
++};
++
++static void __init sun8i_v831_rtc_clk_init(struct device_node *node)
++{
++	sun6i_rtc_clk_init(node, &sun8i_v831_rtc_data);
++}
++CLK_OF_DECLARE_DRIVER(sun8i_v831_rtc_clk, "allwinner,sun8i-v831-rtc",
++		      sun8i_v831_rtc_clk_init);
++
+ /*
+  * The R40 user manual is self-conflicting on whether the prescaler is
+  * fixed or configurable. The clock diagram shows it as fixed, but there
+@@ -745,6 +762,7 @@ static const struct of_device_id sun6i_rtc_dt_ids[] = {
+ 	{ .compatible = "allwinner,sun8i-h3-rtc" },
+ 	{ .compatible = "allwinner,sun8i-r40-rtc" },
+ 	{ .compatible = "allwinner,sun8i-v3-rtc" },
++	{ .compatible = "allwinner,sun8i-v831-rtc" },
+ 	{ .compatible = "allwinner,sun50i-h5-rtc" },
+ 	{ .compatible = "allwinner,sun50i-h6-rtc" },
+ 	{ /* sentinel */ },
+
+From patchwork Sat Dec 12 05:03:42 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969963
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBF3C433FE
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:06:11 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id AC83A22B3F
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:06:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org AC83A22B3F
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=X70aDgFTj3+R1EDfrcah0i8D6POtVr4QG1uh9mFRHO0=; b=NdrXMTJK0ZIsPlQ3UV34hQBXj
+	m/45REHHQ1zXrqi/SExl5aV17tZjlnNFg9ztEdljn8lSgkALhYm3le9mjzDx4nSAXjpvjjyo1SHoX
+	R/n0wiORlNveqVe7e1HyaciisQNOCCybVphB07z428OonpByi4+LzwVmEnlsKe6tMcQgeE+ZZY7pj
+	KcD7RPj3BHjEDXDzQVqe7OUxJ8OHyd6PeVuRJDVN5b5Q+7bpamhhifTL2P7if5vDeS5jMwm47QlZU
+	TkwY3IuGwdUehAvqKj2rhwcY4cLvwEOQx3eE9pzuwmZ5HMH/n+f5WlYAoIIJryppeUhqT79cujYRc
+	hXCM2SwVg==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knx4p-00083K-De; Sat, 12 Dec 2020 05:04:15 +0000
+Received: from relay1.mymailcheap.com ([149.56.97.132])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knx4l-00082u-UD
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 05:04:13 +0000
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com
+ [91.134.140.82])
+ by relay1.mymailcheap.com (Postfix) with ESMTPS id 4D7073F157;
+ Sat, 12 Dec 2020 05:04:08 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+ by filter2.mymailcheap.com (Postfix) with ESMTP id 92D8A2A510;
+ Sat, 12 Dec 2020 06:04:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607749447;
+ bh=1kReouX7Rdy6dmkTKtScUVsD9gkvk20YqptCWD/nPTQ=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=VngGVNzUBlb83e5Of1MvSQLXN9EgFx8RY6oba/trw6li9eym/ffR6er+S8CuOuKDq
+ PNL9N0dM7R8Q7zc7TiYJgtyeEAhrCDTnk3BVGH3QwKrlG4f6cO7vGu+mslMeqaojoj
+ 9TeySdwcqaam69dixdC3apCKdn3M/E6fWd0BNh5o=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+ by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id D8qkaISYhdYb; Sat, 12 Dec 2020 06:04:06 +0100 (CET)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter2.mymailcheap.com (Postfix) with ESMTPS;
+ Sat, 12 Dec 2020 06:04:06 +0100 (CET)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id D767C42D9B;
+ Sat, 12 Dec 2020 05:04:05 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="L/Gu/b/J";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 53D3142D9B;
+ Sat, 12 Dec 2020 05:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607749439; bh=1kReouX7Rdy6dmkTKtScUVsD9gkvk20YqptCWD/nPTQ=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=L/Gu/b/J9CvdNZSy+4BcVkJ8P5mo3t6RU7Ej/w0vhMOalKZNwQiPThJBDr6aV8xnk
+ Sl6oGsYpCFj99tDjDINCAaCnjV2wb/W40vMvTD9y5w1AQTGVXy1k20bSHZ5XTnvrVu
+ 4Oqe3oxIXBsXxTWK7j2lnsy9QmE4TmspDVbuuh14=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 08/12] dt-bindings: mmc: sunxi: add compatible strings for
+ V831 MMC
+Date: Sat, 12 Dec 2020 13:03:42 +0800
+Message-Id: <20201212050346.3644673-1-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; RCVD_VIA_SMTP_AUTH(0.00)[];
+ ARC_NA(0.00)[]; R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[213.133.102.83];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[10];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
+X-Rspamd-Queue-Id: D767C42D9B
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201212_000412_230155_CFC2832F 
+X-CRM114-Status: GOOD (  14.12  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+ linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831 has MMC controllers similar to the ones on H6.
+
+Add a compatible string for them.
+
+The eMMC controller compatible is not added, because the eMMC controller
+is not available on V831, only V833.
+
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ .../devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml       | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
+index e82c9a07b6fb..985586cb93b4 100644
+--- a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
++++ b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
+@@ -35,6 +35,9 @@ properties:
+       - items:
+           - const: allwinner,sun8i-r40-mmc
+           - const: allwinner,sun50i-a64-mmc
++      - items:
++          - const: allwinner,sun8i-v831-mmc
++          - const: allwinner,sun50i-a64-mmc
+       - items:
+           - const: allwinner,sun50i-h5-emmc
+           - const: allwinner,sun50i-a64-emmc
+
+From patchwork Sat Dec 12 05:05:16 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969965
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B024DC4361B
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:07:07 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 6B47622B3F
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:07:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 6B47622B3F
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=HqVKzb53aH0tvs8E68/RguylZ0yCcUtPiEfeRGvBp2s=; b=jb4ObVxLhQ72r2oCh/RyGDsYk
+	BkxxNiKlR/YeJF+2Q/lXF7WSISA2ijKEirKSF7ICxyv6eI2kzfoyAfZ1mvvHVuSt6oCoK/y+urUko
+	YJHs5wqWi+A6ePNY4uqXXcytXqWdUs4GwHiXK9WM4gtbFLB5AW1TDzXPs03efzUJLLk2VmxHqcVLj
+	ufySjjHSJE3E/fhj3FfCWLeQk2g7Yu7j6Lu46loXdbmSjl+EicocNRkrxGYxmjAyJ7fNu8HDKNqC5
+	Wp+Yarrjp2NZ067m1S2pwdBoVLFNELjyUcultNxDe727hdNCALIc5vIGDuVzS1xCdH05v/1PcDq+6
+	tdLHOTAtw==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knx6L-00086t-Sk; Sat, 12 Dec 2020 05:05:49 +0000
+Received: from relay3.mymailcheap.com ([217.182.66.161])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knx6I-00086B-Gn
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 05:05:47 +0000
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com
+ [149.56.130.247])
+ by relay3.mymailcheap.com (Postfix) with ESMTPS id 9E7ED3F15F;
+ Sat, 12 Dec 2020 06:05:40 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter1.mymailcheap.com (Postfix) with ESMTP id C7C012A368;
+ Sat, 12 Dec 2020 00:05:39 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607749539;
+ bh=Ssf11oEwwM9nMlUz4m0LH/yq8lL7ITtIP7gq4UsqQRw=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=BkPoF5VnoPPmlFPbNPSsskQMiYPHSoi/5G2M8L6lIB6yvS+1L0Tuvu9Apd3JQsu1p
+ ywntm68pdYR+gX/BIqsvwIkUov51HkhwvfLGsn8k7J4rp3XelxvnOF42dGm6/aCCeh
+ CPUsbPbcGEuuELCE+6wO8Z4azOztJpH/lyb7qY/I=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+ by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id dERH21EBDmYY; Sat, 12 Dec 2020 00:05:39 -0500 (EST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter1.mymailcheap.com (Postfix) with ESMTPS;
+ Sat, 12 Dec 2020 00:05:38 -0500 (EST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id E9B9442D9B;
+ Sat, 12 Dec 2020 05:05:37 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="QaPg7JZ8";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 8978A42D9B;
+ Sat, 12 Dec 2020 05:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607749531; bh=Ssf11oEwwM9nMlUz4m0LH/yq8lL7ITtIP7gq4UsqQRw=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=QaPg7JZ8/F9J1RfO+LtqXJoPwUlOd4oXr6SSX0oUjoiuauBZgb0KFBCP9fSikmiZu
+ KRPCZLUMbEy+1R+NL8wskhq3WRdQ299woSfo0u7zXHgYaJ7EwQ9cKZMe44y0gfr0pR
+ 5Sk6VrYfJ1CTGpNSrnGk5be4z3BlQQiNNO+YFBLo=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 09/12] dt-bindings: watchdog: sunxi: add compatible string
+ for V831/V833 WDT
+Date: Sat, 12 Dec 2020 13:05:16 +0800
+Message-Id: <20201212050519.3644837-1-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; ARC_NA(0.00)[];
+ RCVD_VIA_SMTP_AUTH(0.00)[];
+ R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all:c];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[148.251.23.173];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[11];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Queue-Id: E9B9442D9B
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201212_000546_801585_2458A991 
+X-CRM114-Status: GOOD (  12.38  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Wim Van Sebroeck <wim@linux-watchdog.org>,
+ Guenter Roeck <linux@roeck-us.net>,
+ Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831/V833 has a watchdog similar to the ones on previous Allwinner SoCs
+after sun6i.
+
+Add a compatible string for it.
+
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-watchdog@vger.kernel.org
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ .../devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml  | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
+index e8f226376108..2f3c350b0057 100644
+--- a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
+@@ -18,6 +18,9 @@ properties:
+     oneOf:
+       - const: allwinner,sun4i-a10-wdt
+       - const: allwinner,sun6i-a31-wdt
++      - items:
++          - const: allwinner,sun8i-v831-wdt
++          - const: allwinner,sun6i-a31-wdt
+       - items:
+           - const: allwinner,sun50i-a64-wdt
+           - const: allwinner,sun6i-a31-wdt
+
+From patchwork Sat Dec 12 05:12:00 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969971
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846F5C433FE
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:13:39 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 3726222D06
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:13:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 3726222D06
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=AtaPsL+EKZ1CMnFtm1l8aT8YxvbuQwtmfXwBen/SBzA=; b=iADhj5FhwN9lFYKZ+ETIpW9jx
+	iB8QF4bo5/vfAWeg0llPWC6/Ofv33ntMoqrXisFaqKX98D5l/ABr4qGfIACnIZ6wyaX4tc6Fi9sUF
+	IOzcLXzWxglBBfP+THpV1B/oMelwBFUSLeNwiwG6coiX4whiIsJiX+elVrjKW1/YSQJAHuIiNg+nx
+	CHGVQV838Rn68XMjVk17+xENdZ5RCWZABtOlR8VQ5sO7JGEmCO1pDtM5tcU9jMu8PFR6rfy6NQzKL
+	as5+RxoiMjviph2m2vau38IosrEg2zQzEx1NaZsba7sda1/ipMqtVZv7vI2cEFWN9dtsu5DQBpC3Z
+	nIqqtW4aA==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knxCi-0000MD-2P; Sat, 12 Dec 2020 05:12:24 +0000
+Received: from relay4.mymailcheap.com ([137.74.199.117])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knxCe-0000Lc-Un
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 05:12:22 +0000
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com
+ [91.134.140.82])
+ by relay4.mymailcheap.com (Postfix) with ESMTPS id 587E13F1CF;
+ Sat, 12 Dec 2020 06:12:19 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter2.mymailcheap.com (Postfix) with ESMTP id 289532A7EF;
+ Sat, 12 Dec 2020 06:12:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607749939;
+ bh=eC+/mRVV3IfQDjzKV7feRYEg5BPAUoKHp3qINz76Op8=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=b9tc5M8GGVIyzcUU+RdoJTuXZ071jgww+aW2MOxCxETHTFyqE/BV9gezMgZBjXFdv
+ HXJAhe6xC41M/aQQdBEmwCCyExmPAT/UiVxahqj55QOYPWkJAI59r0+DGriGUPxDGw
+ 5t78BcTw5lQvsv9dmNPWgFtB9lequ9n2BR2GhIf0=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+ by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id R7CqmRB4-6OK; Sat, 12 Dec 2020 06:12:18 +0100 (CET)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter2.mymailcheap.com (Postfix) with ESMTPS;
+ Sat, 12 Dec 2020 06:12:18 +0100 (CET)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id 5C32142F57;
+ Sat, 12 Dec 2020 05:12:17 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="O1hWraWN";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id DA98942F46;
+ Sat, 12 Dec 2020 05:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607749933; bh=eC+/mRVV3IfQDjzKV7feRYEg5BPAUoKHp3qINz76Op8=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=O1hWraWNUbKjJ4t+7ICgJcEf6Ck00BBSKjLVr7xr69Q6StlST8vS1ZwAZCp3X93g2
+ jeOKyKvxhRrHIMnHDEzeJrJa4R6/uPA/uAswkuPy30iB7PnpdK3hmEFiREaT0X2G/i
+ LHGRT06PGpa/Sj3XAWdADpL5QdljrEvXsqw0CFK8=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 10/12] dt-bindings: spi: sun6i: add compatible for V831
+ SPI
+Date: Sat, 12 Dec 2020 13:12:00 +0800
+Message-Id: <20201212051202.3645115-1-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; RCVD_VIA_SMTP_AUTH(0.00)[];
+ ARC_NA(0.00)[]; R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[148.251.23.173];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[10];
+ MID_CONTAINS_FROM(1.00)[]; RCVD_NO_TLS_LAST(0.10)[];
+ FROM_EQ_ENVFROM(0.00)[]; MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Queue-Id: 5C32142F57
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201212_001221_550334_6C32104D 
+X-CRM114-Status: GOOD (  13.43  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831 has a SPI controller similar to the H6 one.
+
+Add a compatible string for it.
+
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+H6 and V831 SPI controllers is not totally the same with H3: they have
+QSPI support added. Here V831 compatible string is just added in
+parallel with H6 one, but maybe we should make H6 SPI do not fallback to
+H3 one, and add H6 one as fallback to V831?
+
+ .../devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml         | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml b/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
+index 7866a655d81c..a620ff30033e 100644
+--- a/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
++++ b/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
+@@ -24,6 +24,7 @@ properties:
+       - items:
+           - enum:
+               - allwinner,sun8i-r40-spi
++              - allwinner,sun8i-v831-spi
+               - allwinner,sun50i-h6-spi
+           - const: allwinner,sun8i-h3-spi
+ 
+
+From patchwork Sat Dec 12 05:12:01 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969973
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA87C4361B
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:13:39 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 642332343E
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:13:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 642332343E
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=fvfdQk7YyQCXqSY3M+SQHdWDMaD57vHs054QO0dsRRk=; b=mRtu4SulHpCS38uKoareEfnRR
+	w+k8SByaenZaes8Y+uZqZOSRBIBdvCDcWIKlL6eOoFFYPuvOQ1QGwlp6gMXGNvDXAdux+0YWwSWsM
+	eHYvLEUMJttrVK5qXBb0HqLucWI5y5wxnC8x+vWPPWiWPgrcDWknKzsz2xJuFQ70CvN2VO7q4pgLn
+	SNyiOygEmZ48fMomIu2zinvPOOYB9FFFPWYQYwDPaS3LEtMSvSf4j81uJCyZ+y5TjxMYCOVu6Ya76
+	PbfmWNuDhjCtjiNL/BK8WZq8D/k/Fj2l6wLSmE04Hl8K71O8PwCK7PGwDKQ7JzGShjc642bivWhWS
+	8dxLZWKVA==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knxCr-0000OW-S4; Sat, 12 Dec 2020 05:12:33 +0000
+Received: from relay2.mymailcheap.com ([217.182.66.162])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knxCp-0000O4-O1
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 05:12:32 +0000
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com
+ [149.56.130.247])
+ by relay2.mymailcheap.com (Postfix) with ESMTPS id 398453ECD9;
+ Sat, 12 Dec 2020 06:12:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter1.mymailcheap.com (Postfix) with ESMTP id 77A162A379;
+ Sat, 12 Dec 2020 00:12:29 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607749949;
+ bh=08Isw434tKecxUdlGVvZeHc8479ZKucAB0h+E4v+TZk=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=BLqUq2hzRSxGglBwZs2t4No+4etiWPjv42WaYtt3Km7H1571zSqZCyrqKla/FeRTb
+ G6O7jjQJ1V8XEPrR9VRmRfgQFNNo8zG97qJ1CTyM1RyXsokJa6v2L0YT1deKNNYQAA
+ utXhIndEpe4KUOwR+gkRXMZ922Z4gVs178dyGN6s=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+ by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id kMGBxuQ1D7Ro; Sat, 12 Dec 2020 00:12:26 -0500 (EST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter1.mymailcheap.com (Postfix) with ESMTPS;
+ Sat, 12 Dec 2020 00:12:26 -0500 (EST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id A79AB42F46;
+ Sat, 12 Dec 2020 05:12:25 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="uszpWPpX";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 675B042F46;
+ Sat, 12 Dec 2020 05:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607749941; bh=08Isw434tKecxUdlGVvZeHc8479ZKucAB0h+E4v+TZk=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=uszpWPpXKrADpdviqzR3a5kjuWoeMxMPmrr6Ebi8q6fMp5eAKFhj7+/i5SlF1+AFl
+ /dF5C4gPcITPL0oIKs+OEz5sZ2naGKfwyNqHj9XIPzwVTVZxqICr9ZbtuXGuEgddjK
+ tzXPfUoCi1gpA+qjDhOGuHksskeZ1H/G9Of5hjg8=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 11/12] ARM: dts: sun8i: add DTSI file for V831
+Date: Sat, 12 Dec 2020 13:12:01 +0800
+Message-Id: <20201212051202.3645115-2-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; ARC_NA(0.00)[];
+ RCVD_VIA_SMTP_AUTH(0.00)[];
+ R_DKIM_ALLOW(0.00)[aosc.io:s=default]; FROM_HAS_DN(0.00)[];
+ TO_DN_SOME(0.00)[]; R_MISSING_CHARSET(2.50)[];
+ TO_MATCH_ENVRCPT_ALL(0.00)[]; TAGGED_RCPT(0.00)[dt];
+ MIME_GOOD(-0.10)[text/plain]; BROKEN_CONTENT_TYPE(1.50)[];
+ R_SPF_SOFTFAIL(0.00)[~all:c]; DMARC_NA(0.00)[aosc.io];
+ ML_SERVERS(-3.10)[148.251.23.173]; DKIM_TRACE(0.00)[aosc.io:+];
+ RCPT_COUNT_SEVEN(0.00)[8]; MID_CONTAINS_FROM(1.00)[];
+ DBL_PROHIBIT(0.00)[0.76.75.64:email,0.106.207.192:email,0.46.24.200:email,0.76.78.96:email];
+ RCVD_NO_TLS_LAST(0.10)[]; FROM_EQ_ENVFROM(0.00)[];
+ MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Queue-Id: A79AB42F46
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201212_001231_970661_86205B9C 
+X-CRM114-Status: GOOD (  15.84  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+V831 is a new chip by Allwinner, and its functionality is a subset of
+V833 (another new chip with the same die but larger pin count).
+
+Add a DTSI file for V831.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ arch/arm/boot/dts/sun8i-v831.dtsi | 244 ++++++++++++++++++++++++++++++
+ 1 file changed, 244 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-v831.dtsi
+
+diff --git a/arch/arm/boot/dts/sun8i-v831.dtsi b/arch/arm/boot/dts/sun8i-v831.dtsi
+new file mode 100644
+index 000000000000..7ddc4d33d8b2
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-v831.dtsi
+@@ -0,0 +1,244 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2020 Icenowy Zheng <icenowy@aosc.io>
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/sun8i-v833-ccu.h>
++#include <dt-bindings/reset/sun8i-v833-ccu.h>
++
++/ {
++	interrupt-parent = <&gic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <0>;
++			clocks = <&ccu CLK_CPUX>;
++		};
++	};
++
++	osc24M: osc24M_clk {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <24000000>;
++		clock-output-names = "osc24M";
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <GIC_PPI 13
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 14
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 10
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		ccu: clock@3001000 {
++			compatible = "allwinner,sun8i-v833-ccu";
++			reg = <0x03001000 0x1000>;
++			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>;
++			clock-names = "hosc", "losc", "iosc";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++
++		watchdog: watchdog@30090a0 {
++			compatible = "allwinner,sun8i-v831-wdt",
++				     "allwinner,sun6i-a31-wdt";
++			reg = <0x030090a0 0x20>;
++			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&osc24M>;
++		};
++
++		pio: pinctrl@300b000 {
++			compatible = "allwinner,sun8i-v831-pinctrl";
++			reg = <0x0300b000 0x400>;
++			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_APB1>, <&osc24M>, <&rtc 0>;
++			clock-names = "apb", "hosc", "losc";
++			gpio-controller;
++			#gpio-cells = <3>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++
++			mmc0_pins: mmc0-pins {
++				pins = "PF0", "PF1", "PF2", "PF3",
++				       "PF4", "PF5";
++				function = "mmc0";
++				drive-strength = <30>;
++				bias-pull-up;
++			};
++
++			/omit-if-no-ref/
++			mmc1_pins: mmc1-pins {
++				pins = "PG0", "PG1", "PG2", "PG3",
++				       "PG4", "PG5";
++				function = "mmc1";
++				drive-strength = <30>;
++				bias-pull-up;
++			};
++
++			/omit-if-no-ref/
++			spi0_qspi_pins: spi0-qspi-pins {
++				pins = "PC0", "PC2", "PC3", "PC4", "PC5";
++				function = "spi0";
++			};
++
++			/omit-if-no-ref/
++			spi0_cs_pin: spi0-cs-pin {
++				pins = "PC1";
++				function = "spi0";
++			};
++
++			uart0_ph9_ph10_pins: uart0-ph9-ph10-pins {
++				pins = "PH9", "PH10";
++				function = "uart0";
++			};
++		};
++
++		gic: interrupt-controller@3021000 {
++			compatible = "arm,gic-400";
++			reg = <0x03021000 0x1000>,
++			      <0x03022000 0x2000>,
++			      <0x03024000 0x2000>,
++			      <0x03026000 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++
++		mmc0: mmc@4020000 {
++			compatible = "allwinner,sun8i-v831-mmc",
++				     "allwinner,sun50i-a64-mmc";
++			reg = <0x04020000 0x1000>;
++			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
++			clock-names = "ahb", "mmc";
++			resets = <&ccu RST_BUS_MMC0>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc0_pins>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc1: mmc@4021000 {
++			compatible = "allwinner,sun8i-v831-mmc",
++				     "allwinner,sun50i-a64-mmc";
++			reg = <0x04021000 0x1000>;
++			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
++			clock-names = "ahb", "mmc";
++			resets = <&ccu RST_BUS_MMC1>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc1_pins>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		uart0: serial@5000000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05000000 0x400>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART0>;
++			resets = <&ccu RST_BUS_UART0>;
++			status = "disabled";
++		};
++
++		uart1: serial@5000400 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05000400 0x400>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART1>;
++			resets = <&ccu RST_BUS_UART1>;
++			status = "disabled";
++		};
++
++		uart2: serial@5000800 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05000800 0x400>;
++			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART2>;
++			resets = <&ccu RST_BUS_UART2>;
++			status = "disabled";
++		};
++
++		uart3: serial@5000c00 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05000c00 0x400>;
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART3>;
++			resets = <&ccu RST_BUS_UART3>;
++			status = "disabled";
++		};
++
++		spi0: spi@5010000 {
++			compatible = "allwinner,sun8i-v831-spi",
++				     "allwinner,sun50i-h6-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x05010000 0x1000>;
++			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
++			clock-names = "ahb", "mod";
++			resets = <&ccu RST_BUS_SPI0>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		spi1: spi@5011000 {
++			compatible = "allwinner,sun8i-v831-spi",
++				     "allwinner,sun50i-h6-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x05011000 0x1000>;
++			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
++			clock-names = "ahb", "mod";
++			resets = <&ccu RST_BUS_SPI1>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		rtc: rtc@7000000 {
++			compatible = "allwinner,sun8i-v831-rtc";
++			reg = <0x07000000 0x400>;
++			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++			clock-output-names = "osc32k", "osc32k-out", "iosc";
++			#clock-cells = <1>;
++		};
++	};
++};
+
+From patchwork Sat Dec 12 05:13:10 2020
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Icenowy Zheng <icenowy@aosc.io>
+X-Patchwork-Id: 11969975
+Return-Path: 
+ <SRS0=pZgq=FQ=lists.infradead.org=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A10C433FE
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:14:44 +0000 (UTC)
+Received: from merlin.infradead.org (merlin.infradead.org [205.233.59.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id 07752230FB
+	for <linux-arm-kernel@archiver.kernel.org>;
+ Sat, 12 Dec 2020 05:14:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 07752230FB
+Authentication-Results: mail.kernel.org;
+ dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: mail.kernel.org;
+ spf=none
+ smtp.mailfrom=linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:Message-Id:Date:
+	Subject:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	 bh=gBq1AVl+W0fVT5TOibg9ht2x5F9Dd6bP6Xu0Z3Hvilg=; b=Q4+/wovTPXVdLp89EKSQIOj9H
+	9UDYoES8/fliVJit76csgr6vTTeGykODDiQvsWtWdKl11GO8bRX2uUYbAwxdpZvOsQrBmIxY4nNnB
+	nSDFOt6hr0O2HkMJ/D7IHNQMZ1y6xGqqQOuC3iY5OVBkFKWI6+25m/QSi2Wy84mu85rygP2pWaXvT
+	NYLR2T+aphaykjGSyqojiNO47vMFQLd8Hdvl7YvYq6+ebHDOJeDLLCGn9dwF+MKKS4fUSSk/lm/7q
+	bbGsL4DbTvzEVjjhd+bIAjOZh1Hnr80+YXAUZtgnXao0XQjUpr7ptfso4i86HuiDxdsOiG5c0vPbA
+	m9ZY+qhbQ==;
+Received: from localhost ([::1] helo=merlin.infradead.org)
+	by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+	id 1knxDs-0000Yy-7I; Sat, 12 Dec 2020 05:13:36 +0000
+Received: from relay4.mymailcheap.com ([137.74.199.117])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knxDp-0000YC-5M
+ for linux-arm-kernel@lists.infradead.org; Sat, 12 Dec 2020 05:13:34 +0000
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com
+ [149.56.130.247])
+ by relay4.mymailcheap.com (Postfix) with ESMTPS id 079E43F20A;
+ Sat, 12 Dec 2020 06:13:32 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+ by filter1.mymailcheap.com (Postfix) with ESMTP id 3C14B2A379;
+ Sat, 12 Dec 2020 00:13:31 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+ s=default; t=1607750011;
+ bh=n5uS2JopEBit3sx7utgqMyfNdLKegsVXVvNEuIizCGI=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=wbkOGgA719BgPDJLlp4Q+Kl9hOwFH+mrnefam/JN4uBfNDqiKIxlEYVfvkciKCdHu
+ IQXsPg24lVhTJ2/y76LAoPrhm2GhgG3HZ7mXyTFkZTQDZhDZFsNCngjF+ehZWXdEBP
+ pyYWC2PPF0auMi077aXRGHSkAtQJLiexbTjsOW3g=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+ by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id bc1J05pFvXds; Sat, 12 Dec 2020 00:13:30 -0500 (EST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+ (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+ (No client certificate requested)
+ by filter1.mymailcheap.com (Postfix) with ESMTPS;
+ Sat, 12 Dec 2020 00:13:30 -0500 (EST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+ by mail20.mymailcheap.com (Postfix) with ESMTP id 2A46C42D9B;
+ Sat, 12 Dec 2020 05:13:29 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com; dkim=pass (1024-bit key;
+ unprotected) header.d=aosc.io header.i=@aosc.io header.b="rTMCgPT4";
+ dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.161.2])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest
+ SHA256) (No client certificate requested)
+ by mail20.mymailcheap.com (Postfix) with ESMTPSA id 26C2642F57;
+ Sat, 12 Dec 2020 05:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+ t=1607750002; bh=n5uS2JopEBit3sx7utgqMyfNdLKegsVXVvNEuIizCGI=;
+ h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+ b=rTMCgPT4IyF1TEzAOgchJMrLtTuqEUT/QBs9KGmIrddJivXNNRbF1DrwYqwvRQ1Rp
+ NFppomOnhpaXROSP616ZFEQauMzB4AQE6ucGwW4d9YO67QC6F8JxzgYMUn9JVBwQB3
+ 6ixEQWBq1xBDS53Ei4XFf+6JHgabCfmcJJ15702M=
+From: Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [RFC PATCH 12/12] [DO NOT MERGE] ARM: dts: sun8i: v831: add a device
+ tree file for Y20GA
+Date: Sat, 12 Dec 2020 13:13:10 +0800
+Message-Id: <20201212051310.3645299-1-icenowy@aosc.io>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201212040157.3639864-1-icenowy@aosc.io>
+References: <20201212040157.3639864-1-icenowy@aosc.io>
+MIME-Version: 1.0
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spamd-Result: default: False [6.40 / 20.00]; ARC_NA(0.00)[];
+ RCVD_VIA_SMTP_AUTH(0.00)[];
+ R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+ RECEIVED_SPAMHAUS_PBL(0.00)[59.41.161.2:received];
+ FROM_HAS_DN(0.00)[]; TO_DN_SOME(0.00)[];
+ R_MISSING_CHARSET(2.50)[]; TO_MATCH_ENVRCPT_ALL(0.00)[];
+ TAGGED_RCPT(0.00)[dt]; MIME_GOOD(-0.10)[text/plain];
+ BROKEN_CONTENT_TYPE(1.50)[]; R_SPF_SOFTFAIL(0.00)[~all:c];
+ DMARC_NA(0.00)[aosc.io]; ML_SERVERS(-3.10)[148.251.23.173];
+ DKIM_TRACE(0.00)[aosc.io:+]; RCPT_COUNT_SEVEN(0.00)[8];
+ MID_CONTAINS_FROM(1.00)[]; DBL_PROHIBIT(0.00)[0.0.0.0:email];
+ RCVD_NO_TLS_LAST(0.10)[]; FROM_EQ_ENVFROM(0.00)[];
+ MIME_TRACE(0.00)[0:+];
+ ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+ RCVD_COUNT_TWO(0.00)[2]; SUSPICIOUS_RECIPS(1.50)[];
+ HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Queue-Id: 2A46C42D9B
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20201212_001333_447789_12DF8A54 
+X-CRM114-Status: GOOD (  16.30  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+linux-arm-kernel=archiver.kernel.org@lists.infradead.org
+
+Yi Y20GA is an IP camera with QG2101A chip (a rebranded Allwinner V831).
+
+Add a device tree for it.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ arch/arm/boot/dts/Makefile                |  3 +-
+ arch/arm/boot/dts/sun8i-v831-yi-y20ga.dts | 53 +++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-v831-yi-y20ga.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ce66ffd5a1bb..2b2e93bb9ee2 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1212,7 +1212,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-t3-cqa3t-bv3.dtb \
+ 	sun8i-v3s-licheepi-zero.dtb \
+ 	sun8i-v3s-licheepi-zero-dock.dtb \
+-	sun8i-v40-bananapi-m2-berry.dtb
++	sun8i-v40-bananapi-m2-berry.dtb \
++	sun8i-v831-yi-y20ga.dtb
+ dtb-$(CONFIG_MACH_SUN9I) += \
+ 	sun9i-a80-optimus.dtb \
+ 	sun9i-a80-cubieboard4.dtb
+diff --git a/arch/arm/boot/dts/sun8i-v831-yi-y20ga.dts b/arch/arm/boot/dts/sun8i-v831-yi-y20ga.dts
+new file mode 100644
+index 000000000000..16f4b6dbe0d2
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-v831-yi-y20ga.dts
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2020 Icenowy Zheng <icenowy@aosc.io>
++ */
++
++/dts-v1/;
++#include "sun8i-v831.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Yi Camera Y20GA";
++	compatible = "xiaoyi,y20ga", "allwinner,sun8i-v831";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
++
++&mmc0 {
++	vmmc-supply = <&reg_vcc3v3>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&spi0 {
++	pinctrl-0 = <&spi0_qspi_pins>, <&spi0_cs_pin>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	flash@0 {
++		compatible = "winbond,w25q128", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <4000000>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_ph9_ph10_pins>;
++	status = "okay";
++};

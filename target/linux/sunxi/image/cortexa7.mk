@@ -217,3 +217,12 @@ define Device/xunlong_orangepi-2
   SOC := sun8i-h3
 endef
 TARGET_DEVICES += xunlong_orangepi-2
+
+define Device/sipeed_maixii
+  DEVICE_VENDOR := Sipeed
+  DEVICE_MODEL := MaixII
+  DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-leds-gpio kmod-brcmfmac \
+  kmod-gpio-button-hotplug wpad-basic-wolfssl
+  SOC := sun8i-v831
+endef
+TARGET_DEVICES += sipeed_maixii

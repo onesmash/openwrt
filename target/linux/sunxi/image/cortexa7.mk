@@ -222,7 +222,7 @@ define Device/sipeed_maixii
   DEVICE_VENDOR := Sipeed
   DEVICE_MODEL := MaixII
   DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-leds-gpio kmod-brcmfmac \
-  kmod-gpio-button-hotplug wpad-basic-wolfssl
+  kmod-gpio-button-hotplug wpad-basic-wolfssl kmod-rtl8189fs
   SOC := sun8i-v831
 endef
 TARGET_DEVICES += sipeed_maixii

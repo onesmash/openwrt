@@ -1,7 +1,7 @@
 Index: u-boot-2020.04/configs/Sipeed_MaixII_defconfig
 ===================================================================
 --- /dev/null
-+++ u-boot-2020.04/configs/Sipeed_MaixII_defconfig
++++ b/configs/Sipeed_MaixII_defconfig
 @@ -0,0 +1,21 @@
 +CONFIG_ARM=y
 +CONFIG_ARCH_SUNXI=y

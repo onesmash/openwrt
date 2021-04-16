@@ -1,0 +1,158 @@
+Index: rtl8189fs-2021-04-12-62c31d57/os_dep/linux/ioctl_cfg80211.c
+===================================================================
+--- rtl8189fs-2021-04-12-62c31d57.orig/os_dep/linux/ioctl_cfg80211.c
++++ rtl8189fs-2021-04-12-62c31d57/os_dep/linux/ioctl_cfg80211.c
+@@ -185,6 +185,10 @@ static struct ieee80211_channel rtw_5ghz
+ 	CHAN5G(216, 0),
+ };
+ 
++int ieee80211_freq_khz_to_channel(u32 freq);
++
++struct ieee80211_channel *
++ieee80211_get_channel_khz(struct wiphy *wiphy, u32 freq);
+ 
+ void rtw_2g_channels_init(struct ieee80211_channel *channels)
+ {
+@@ -489,7 +493,7 @@ struct cfg80211_bss *rtw_cfg80211_inform
+ 
+ 	channel = pnetwork->network.Configuration.DSConfig;
+ 	freq = rtw_ch2freq(channel);
+-	notify_channel = ieee80211_get_channel(wiphy, freq);
++	notify_channel = ieee80211_get_channel_khz(wiphy, freq);
+ 
+ 	if (0)
+ 		notify_timestamp = le64_to_cpu(*(u64*)rtw_get_timestampe_from_ie(pnetwork->network.IEs));
+@@ -630,7 +634,7 @@ int rtw_cfg80211_check_bss(_adapter *pad
+ 		return _FALSE;
+ 
+ 	freq = rtw_ch2freq(pnetwork->Configuration.DSConfig);
+-	notify_channel = ieee80211_get_channel(padapter->rtw_wdev->wiphy, freq);
++	notify_channel = ieee80211_get_channel_khz(padapter->rtw_wdev->wiphy, freq);
+ 	bss = cfg80211_get_bss(padapter->rtw_wdev->wiphy, notify_channel,
+ 			pnetwork->MacAddress, pnetwork->Ssid.Ssid,
+ 			pnetwork->Ssid.SsidLength,
+@@ -721,7 +725,7 @@ void rtw_cfg80211_ibss_indicate_connect(
+ 	}
+ 	//notify cfg80211 that device joined an IBSS
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 15, 0))
+-	notify_channel = ieee80211_get_channel(wiphy, freq);
++	notify_channel = ieee80211_get_channel_khz(wiphy, freq);
+ 	cfg80211_ibss_joined(padapter->pnetdev, cur_network->network.MacAddress, notify_channel, GFP_ATOMIC);
+ #else
+ 	cfg80211_ibss_joined(padapter->pnetdev, cur_network->network.MacAddress, GFP_ATOMIC);
+@@ -806,7 +810,7 @@ check_bss:
+ 		#endif
+ 
+ 		freq = rtw_ch2freq(channel);
+-		notify_channel = ieee80211_get_channel(wiphy, freq);
++		notify_channel = ieee80211_get_channel_khz(wiphy, freq);
+ 		#endif
+ 
+ 		DBG_871X(FUNC_ADPT_FMT" call cfg80211_roamed\n", FUNC_ADPT_ARG(padapter));
+@@ -3670,9 +3674,9 @@ void rtw_cfg80211_indicate_sta_assoc(_ad
+ 
+ #if defined(RTW_USE_CFG80211_STA_EVENT) || defined(COMPAT_KERNEL_RELEASE)
+ 	{
+-		struct station_info sinfo = {
+-			.filled = STATION_INFO_ASSOC_REQ_IES,
+-		};
++		struct station_info sinfo = {
++			.filled = STATION_INFO_ASSOC_REQ_IES,
++		};
+ 		u8 ie_offset;
+ 		if (GetFrameSubType(pmgmt_frame) == WIFI_ASSOCREQ)
+ 			ie_offset = _ASOCREQ_IE_OFFSET_;
+@@ -4582,7 +4586,7 @@ static int	cfg80211_rtw_set_channel(stru
+ 	#endif
+ 	, struct ieee80211_channel *chan, enum nl80211_channel_type channel_type)
+ {
+-	int chan_target = (u8) ieee80211_frequency_to_channel(chan->center_freq);
++	int chan_target = (u8) ieee80211_freq_khz_to_channel(chan->center_freq);
+ 	int chan_offset = HAL_PRIME_CHNL_OFFSET_DONT_CARE;
+ 	int chan_width = CHANNEL_WIDTH_20;
+ 	_adapter *padapter = wiphy_to_adapter(wiphy);
+@@ -5094,7 +5098,7 @@ static s32 cfg80211_rtw_remain_on_channe
+ 	struct net_device *ndev = wdev_to_ndev(wdev);
+ #endif
+ 	s32 err = 0;
+-	u8 remain_ch = (u8) ieee80211_frequency_to_channel(channel->center_freq);
++	u8 remain_ch = (u8) ieee80211_freq_khz_to_channel(channel->center_freq);
+ 	u8 ready_on_channel = _FALSE;
+ 	_adapter *padapter;
+ 	struct rtw_wdev_priv *pwdev_priv;
+@@ -5590,7 +5594,7 @@ static int cfg80211_rtw_mgmt_tx(struct w
+ 		goto exit;
+ 	}
+ 
+-	tx_ch = (u8)ieee80211_frequency_to_channel(chan->center_freq);
++	tx_ch = (u8)ieee80211_freq_khz_to_channel(chan->center_freq);
+ 
+ 	padapter = (_adapter *)rtw_netdev_priv(ndev);
+ 	pwdev_priv = adapter_wdev_data(padapter);
+@@ -6685,7 +6689,7 @@ int rtw_hostapd_acs_dump_survey(struct w
+ 
+ 	channel = pch_set[idx].ChannelNum;
+ 	freq = rtw_ch2freq(channel);
+-	info->channel = ieee80211_get_channel(wiphy, freq);
++	info->channel = ieee80211_get_channel_khz(wiphy, freq);
+ 	/* RTW_INFO("%s: channel %d, freq %d\n", __func__, channel, freq); */
+ 
+ 	if (!info->channel)
+Index: rtl8189fs-2021-04-12-62c31d57/os_dep/linux/ioctl_cfg80211.h
+===================================================================
+--- rtl8189fs-2021-04-12-62c31d57.orig/os_dep/linux/ioctl_cfg80211.h
++++ rtl8189fs-2021-04-12-62c31d57/os_dep/linux/ioctl_cfg80211.h
+@@ -171,6 +171,9 @@ int rtw_cfg80211_set_mgnt_wpsp2pie(struc
+ 
+ bool rtw_cfg80211_pwr_mgmt(_adapter *adapter);
+ 
++bool cfg80211_rx_mgmt_khz(struct wireless_dev *wdev, int freq, int sig_dbm,
++			  const u8 *buf, size_t len, u32 flags);
++
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,4,0))  && !defined(COMPAT_KERNEL_RELEASE)
+ #define rtw_cfg80211_rx_mgmt(adapter, freq, sig_dbm, buf, len, gfp) cfg80211_rx_mgmt((adapter)->pnetdev, freq, buf, len, gfp)
+ #elif (LINUX_VERSION_CODE < KERNEL_VERSION(3,6,0))
+@@ -178,9 +181,9 @@ bool rtw_cfg80211_pwr_mgmt(_adapter *ada
+ #elif (LINUX_VERSION_CODE < KERNEL_VERSION(3,12,0))
+ #define rtw_cfg80211_rx_mgmt(adapter, freq, sig_dbm, buf, len, gfp) cfg80211_rx_mgmt((adapter)->rtw_wdev, freq, sig_dbm, buf, len, gfp)
+ #elif (LINUX_VERSION_CODE < KERNEL_VERSION(3 , 18 , 0))
+-#define rtw_cfg80211_rx_mgmt(adapter , freq , sig_dbm , buf , len , gfp) cfg80211_rx_mgmt((adapter)->rtw_wdev , freq , sig_dbm , buf , len , 0 , gfp)
++#define rtw_cfg80211_rx_mgmt(adapter , freq , sig_dbm , buf , len , gfp) cfg80211_rx_mgmt_khz((adapter)->rtw_wdev , freq , sig_dbm , buf , len , 0 , gfp)
+ #else
+-#define rtw_cfg80211_rx_mgmt(adapter , freq , sig_dbm , buf , len , gfp) cfg80211_rx_mgmt((adapter)->rtw_wdev , freq , sig_dbm , buf , len , 0)
++#define rtw_cfg80211_rx_mgmt(adapter , freq , sig_dbm , buf , len , gfp) cfg80211_rx_mgmt_khz((adapter)->rtw_wdev , freq , sig_dbm , buf , len , 0)
+ #endif
+ 
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,4,0))  && !defined(COMPAT_KERNEL_RELEASE)
+Index: rtl8189fs-2021-04-12-62c31d57/os_dep/linux/wifi_regd.c
+===================================================================
+--- rtl8189fs-2021-04-12-62c31d57.orig/os_dep/linux/wifi_regd.c
++++ rtl8189fs-2021-04-12-62c31d57/os_dep/linux/wifi_regd.c
+@@ -301,6 +301,9 @@ static void _rtw_reg_apply_radar_flags(s
+ 	}
+ }
+ 
++struct ieee80211_channel *
++ieee80211_get_channel_khz(struct wiphy *wiphy, u32 freq);
++
+ static void _rtw_reg_apply_flags(struct wiphy *wiphy)
+ {
+ #if 1				// by channel plan
+@@ -335,7 +338,7 @@ static void _rtw_reg_apply_flags(struct
+ 		channel = channel_set[i].ChannelNum;
+ 		freq = rtw_ch2freq(channel);
+ 
+-		ch = ieee80211_get_channel(wiphy, freq);
++		ch = ieee80211_get_channel_khz(wiphy, freq);
+ 		if (ch) {
+ 			if (channel_set[i].ScanType == SCAN_PASSIVE) {
+ 				#if defined(CONFIG_DFS_MASTER) && (LINUX_VERSION_CODE < KERNEL_VERSION(3, 14, 0))
+@@ -381,7 +384,7 @@ static void _rtw_reg_apply_flags(struct
+ 		channel = channels[i];
+ 		freq = rtw_ch2freq(channel);
+ 
+-		ch = ieee80211_get_channel(wiphy, freq);
++		ch = ieee80211_get_channel_khz(wiphy, freq);
+ 		if (ch) {
+ 			if (channel <= 11)
+ 				ch->flags = 0;

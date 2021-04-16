@@ -301,6 +301,12 @@ define U-Boot/Bananapi_M2_Ultra
   BUILD_DEVICES:=sinovoip_bananapi-m2-ultra
 endef
 
+define U-Boot/Sipeed_MaixII
+  BUILD_SUBTARGET:=cortexa7
+  NAME:=Sipeed MaixII
+  BUILD_DEVICES:=sipeed_maixii
+endef
+
 UBOOT_TARGETS := \
 	a64-olinuxino \
 	a64-olinuxino-emmc \
@@ -344,7 +350,8 @@ UBOOT_TARGETS := \
 	pine64_plus \
 	sopine_baseboard \
 	orangepi_zero_plus \
-	libretech_all_h3_cc_h5
+	libretech_all_h3_cc_h5 \
+  Sipeed_MaixII
 
 UBOOT_CONFIGURE_VARS += USE_PRIVATE_LIBGCC=yes
 

@@ -1,0 +1,832 @@
+
+
+Tue Apr 20 16:29:38 2021
+Command line: TestDisk
+
+TestDisk 7.1, Data Recovery Utility, July 2019
+Christophe GRENIER <grenier@cgsecurity.org>
+https://www.cgsecurity.org
+OS: Linux, kernel 5.4.0-67-generic (#75-Ubuntu SMP Fri Feb 19 18:03:38 UTC 2021) x86_64
+Compiler: GCC 9.2
+ext2fs lib: 1.45.5, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none, curses lib: ncurses 6.1
+User is not root!
+Hard disk list
+
+
+TestDisk exited normally.
+Using locale 'en_US.UTF-8'.
+
+
+Tue Apr 20 16:29:38 2021
+Command line: TestDisk /debug
+
+TestDisk 7.1, Data Recovery Utility, July 2019
+Christophe GRENIER <grenier@cgsecurity.org>
+https://www.cgsecurity.org
+OS: Linux, kernel 5.4.0-67-generic (#75-Ubuntu SMP Fri Feb 19 18:03:38 UTC 2021) x86_64
+Compiler: GCC 9.2
+ext2fs lib: 1.45.5, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none, curses lib: ncurses 6.1
+Warning: can't get size for Disk /dev/mapper/control - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop0 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop1 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop2 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop3 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop4 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop5 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop6 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop7 - 0 B - 0 sectors, sector size=512
+Hard disk list
+Disk /dev/vda - 42 GB / 40 GiB - CHS 83220 16 63, sector size=512
+
+Partition table type (auto): Intel
+Disk /dev/vda - 42 GB / 40 GiB
+Partition table type: Intel
+
+Interface Advanced
+Geometry from i386 MBR: head=5 sector=35
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+
+
+dir_partition inode=2
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /
+       2 drwxr-xr-x     0      0      4096  9-Apr-2021 23:59 .
+       2 drwxr-xr-x     0      0      4096  9-Apr-2021 23:59 ..
+      11 drwx------     0      0     16384 18-Mar-2021 14:35 lost+found
+      12 -rw-------     0      0 993249280 18-Mar-2021 14:35 swapfile
+ 1048577 drwxr-xr-x     0      0      4096 16-Apr-2021 11:51 etc
+  786433 drwxr-xr-x     0      0      4096 18-Mar-2021 14:36 media
+      13 lrwxrwxrwx     0      0         7 18-Mar-2021 14:36 bin
+  917505 drwxr-xr-x     0      0      4096 18-Mar-2021 14:57 boot
+ 1179649 drwxr-xr-x     0      0      4096 18-Mar-2021 14:36 dev
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 home
+      14 lrwxrwxrwx     0      0         7 18-Mar-2021 14:36 lib
+      15 lrwxrwxrwx     0      0         9 18-Mar-2021 14:36 lib32
+      16 lrwxrwxrwx     0      0         9 18-Mar-2021 14:36 lib64
+      17 lrwxrwxrwx     0      0        10 18-Mar-2021 14:36 libx32
+  262145 drwxr-xr-x     0      0      4096 12-Apr-2021 14:37 mnt
+  393217 drwxr-xr-x     0      0      4096 10-Apr-2021 00:01 opt
+  655361 drwxr-xr-x     0      0      4096 15-Apr-2020 19:09 proc
+  917506 drwx------     0      0      4096 14-Apr-2021 17:50 root
+  655362 drwxr-xr-x     0      0      4096 18-Mar-2021 14:42 run
+      18 lrwxrwxrwx     0      0         8 18-Mar-2021 14:36 sbin
+  131074 drwxr-xr-x     0      0      4096 23-Apr-2020 15:34 srv
+  262146 drwxr-xr-x     0      0      4096 15-Apr-2020 19:09 sys
+  393218 drwxrwxrwt     0      0      4096 20-Apr-2021 16:24 tmp
+  262147 drwxr-xr-x     0      0      4096 18-Mar-2021 14:36 usr
+  786436 drwxr-xr-x     0      0      4096 12-Apr-2021 10:47 var
+X     19 drwxr-xr-x  1000   1000         0 12-Apr-2021 16:07 .ismount-test-file
+
+dir_partition inode=131073
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 .
+       2 drwxr-xr-x     0      0      4096  9-Apr-2021 23:59 ..
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 xuhui
+
+dir_partition inode=131075
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 .
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 ..
+  139898 drwxr-xr-x  1000   1000      4096 11-Apr-2021 16:08 .subversion
+  150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 openwrt
+  191927 -rw-rw-r--  1000   1000        51 12-Apr-2021 14:40 .gitconfig
+ 1459116 drwx------  1000   1000      4096 20-Apr-2021 10:36 .cache
+  131076 -rw-r--r--  1000   1000         0 12-Apr-2021 16:43 .sudo_as_admin_successful
+  131077 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:14 .vscode-server
+  131082 -rw-rw-r--  1000   1000       183 15-Apr-2021 21:45 .wget-hsts
+  164544 -rw-------  1000   1000       781 14-Apr-2021 11:00 .viminfo
+  163538 drwx------  1000   1000      4096 14-Apr-2021 22:56 .config
+X 150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history-49374.tmp
+
+dir_partition inode=1453792
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+
+dir_partition inode=1453931
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/package
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1453932 -rw-rw-r--  1000   1000      4108 12-Apr-2021 16:09 Makefile
+ 1453933 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 base-files
+ 1574005 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 boot
+ 1574347 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 devel
+ 1574375 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 firmware
+ 1574460 drwxrwxr-x  1000   1000      4096 14-Apr-2021 16:20 kernel
+ 1574957 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 libs
+ 1575187 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 network
+ 1576179 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 system
+ 1576287 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 utils
+ 1584893 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 feeds
+
+dir_partition inode=1574005
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/package/boot
+ 1574005 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 ..
+ 1574006 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-mediatek
+ 1574008 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-mvebu
+ 1574016 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-rockchip
+ 1574018 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-sunxi
+ 1574020 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-tools
+ 1574024 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 at91bootstrap
+ 1574027 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 fconfig
+ 1574029 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 grub2
+ 1574037 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 imx-bootlets
+ 1574043 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 kexec-tools
+ 1574050 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 kobs-ng
+ 1574057 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 mt7623n-preloader
+ 1574059 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tfa-layerscape
+ 1574064 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-at91
+ 1574068 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-envtools
+ 1574093 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-fritz4040
+ 1574095 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-imx6
+ 1574101 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-kirkwood
+ 1574118 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-lantiq
+ 1574170 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-layerscape
+ 1574190 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-mediatek
+ 1574225 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-mvebu
+ 1574229 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-mxs
+ 1574234 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-omap
+ 1574238 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-oxnas
+ 1574299 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-ramips
+ 1574303 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-rockchip
+ 1574315 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-sunxi
+ 1574337 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-tegra
+ 1574339 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-zynq
+
+dir_partition inode=1574315
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/package/boot/uboot-sunxi
+ 1574315 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .
+ 1574005 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 ..
+ 1574316 -rw-rw-r--  1000   1000      8292 16-Apr-2021 14:08 Makefile
+ 1574317 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:51 patches
+ 1574334 -rw-rw-r--  1000   1000       410 12-Apr-2021 16:09 uEnv-a64.txt
+ 1574335 -rw-rw-r--  1000   1000       305 12-Apr-2021 16:09 uEnv-default.txt
+ 1574336 -rw-rw-r--  1000   1000       305 12-Apr-2021 16:09 uEnv-pangolin.txt
+Directory /home/xuhui/openwrt/package/boot
+ 1574005 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 ..
+ 1574006 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-mediatek
+ 1574008 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-mvebu
+ 1574016 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-rockchip
+ 1574018 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-sunxi
+ 1574020 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 arm-trusted-firmware-tools
+ 1574024 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 at91bootstrap
+ 1574027 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 fconfig
+ 1574029 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 grub2
+ 1574037 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 imx-bootlets
+ 1574043 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 kexec-tools
+ 1574050 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 kobs-ng
+ 1574057 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 mt7623n-preloader
+ 1574059 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tfa-layerscape
+ 1574064 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-at91
+ 1574068 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-envtools
+ 1574093 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-fritz4040
+ 1574095 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-imx6
+ 1574101 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-kirkwood
+ 1574118 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-lantiq
+ 1574170 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-layerscape
+ 1574190 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-mediatek
+ 1574225 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-mvebu
+ 1574229 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-mxs
+ 1574234 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-omap
+ 1574238 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-oxnas
+ 1574299 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-ramips
+ 1574303 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-rockchip
+ 1574315 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-sunxi
+ 1574337 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-tegra
+ 1574339 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 uboot-zynq
+Directory /home/xuhui/openwrt/package
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1453932 -rw-rw-r--  1000   1000      4108 12-Apr-2021 16:09 Makefile
+ 1453933 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 base-files
+ 1574005 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 boot
+ 1574347 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 devel
+ 1574375 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 firmware
+ 1574460 drwxrwxr-x  1000   1000      4096 14-Apr-2021 16:20 kernel
+ 1574957 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 libs
+ 1575187 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 network
+ 1576179 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 system
+ 1576287 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 utils
+ 1584893 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 feeds
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+Directory /home/xuhui
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 .
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 ..
+  139898 drwxr-xr-x  1000   1000      4096 11-Apr-2021 16:08 .subversion
+  150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 openwrt
+  191927 -rw-rw-r--  1000   1000        51 12-Apr-2021 14:40 .gitconfig
+ 1459116 drwx------  1000   1000      4096 20-Apr-2021 10:36 .cache
+  131076 -rw-r--r--  1000   1000         0 12-Apr-2021 16:43 .sudo_as_admin_successful
+  131077 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:14 .vscode-server
+  131082 -rw-rw-r--  1000   1000       183 15-Apr-2021 21:45 .wget-hsts
+  164544 -rw-------  1000   1000       781 14-Apr-2021 11:00 .viminfo
+  163538 drwx------  1000   1000      4096 14-Apr-2021 22:56 .config
+X 150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history-49374.tmp
+
+dir_partition inode=1453792
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+
+dir_partition inode=1454037
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+
+dir_partition inode=1459170
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches/004-add-sipeed-maixii.patch
+ 1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1459163 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 ..
+ 1459172 -rw-rw-r--  1000   1000         0 20-Apr-2021 15:52 Sipeed_MaixII_defconfig
+ 1459173 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 configs
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+
+dir_partition inode=1459170
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches/004-add-sipeed-maixii.patch
+ 1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1459163 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 ..
+ 1459172 -rw-rw-r--  1000   1000         0 20-Apr-2021 15:52 Sipeed_MaixII_defconfig
+ 1459173 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 configs
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+
+dir_partition inode=1453931
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/package
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1453932 -rw-rw-r--  1000   1000      4108 12-Apr-2021 16:09 Makefile
+ 1453933 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 base-files
+ 1574005 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 boot
+ 1574347 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 devel
+ 1574375 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 firmware
+ 1574460 drwxrwxr-x  1000   1000      4096 14-Apr-2021 16:20 kernel
+ 1574957 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 libs
+ 1575187 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 network
+ 1576179 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 system
+ 1576287 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 utils
+ 1584893 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 feeds
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+
+dir_partition inode=1454037
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+Directory /home/xuhui
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 .
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 ..
+  139898 drwxr-xr-x  1000   1000      4096 11-Apr-2021 16:08 .subversion
+  150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 openwrt
+  191927 -rw-rw-r--  1000   1000        51 12-Apr-2021 14:40 .gitconfig
+ 1459116 drwx------  1000   1000      4096 20-Apr-2021 10:36 .cache
+  131076 -rw-r--r--  1000   1000         0 12-Apr-2021 16:43 .sudo_as_admin_successful
+  131077 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:14 .vscode-server
+  131082 -rw-rw-r--  1000   1000       183 15-Apr-2021 21:45 .wget-hsts
+  164544 -rw-------  1000   1000       781 14-Apr-2021 11:00 .viminfo
+  163538 drwx------  1000   1000      4096 14-Apr-2021 22:56 .config
+X 150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history-49374.tmp
+Directory /home
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 .
+       2 drwxr-xr-x     0      0      4096  9-Apr-2021 23:59 ..
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 xuhui
+
+dir_partition inode=131075
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 .
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 ..
+  139898 drwxr-xr-x  1000   1000      4096 11-Apr-2021 16:08 .subversion
+  150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 openwrt
+  191927 -rw-rw-r--  1000   1000        51 12-Apr-2021 14:40 .gitconfig
+ 1459116 drwx------  1000   1000      4096 20-Apr-2021 10:36 .cache
+  131076 -rw-r--r--  1000   1000         0 12-Apr-2021 16:43 .sudo_as_admin_successful
+  131077 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:14 .vscode-server
+  131082 -rw-rw-r--  1000   1000       183 15-Apr-2021 21:45 .wget-hsts
+  164544 -rw-------  1000   1000       781 14-Apr-2021 11:00 .viminfo
+  163538 drwx------  1000   1000      4096 14-Apr-2021 22:56 .config
+X 150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history-49374.tmp
+Directory /home
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 .
+       2 drwxr-xr-x     0      0      4096  9-Apr-2021 23:59 ..
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 xuhui
+
+dir_partition inode=131075
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 .
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 ..
+  139898 drwxr-xr-x  1000   1000      4096 11-Apr-2021 16:08 .subversion
+  150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 openwrt
+  191927 -rw-rw-r--  1000   1000        51 12-Apr-2021 14:40 .gitconfig
+ 1459116 drwx------  1000   1000      4096 20-Apr-2021 10:36 .cache
+  131076 -rw-r--r--  1000   1000         0 12-Apr-2021 16:43 .sudo_as_admin_successful
+  131077 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:14 .vscode-server
+  131082 -rw-rw-r--  1000   1000       183 15-Apr-2021 21:45 .wget-hsts
+  164544 -rw-------  1000   1000       781 14-Apr-2021 11:00 .viminfo
+  163538 drwx------  1000   1000      4096 14-Apr-2021 22:56 .config
+X 150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history-49374.tmp
+
+dir_partition inode=1453792
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+
+dir_partition inode=1454037
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+
+dir_partition inode=1459170
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches/004-add-sipeed-maixii.patch
+ 1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1459163 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 ..
+ 1459172 -rw-rw-r--  1000   1000         0 20-Apr-2021 15:52 Sipeed_MaixII_defconfig
+ 1459173 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 configs
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+
+dir_partition inode=1459170
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches/004-add-sipeed-maixii.patch
+ 1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1459163 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 ..
+ 1459172 -rw-rw-r--  1000   1000         0 20-Apr-2021 15:52 Sipeed_MaixII_defconfig
+ 1459173 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 configs
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+
+dir_partition inode=1453845
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches/004-add-sipeed-maixii.patch~
+ 1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 .
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 ..
+ 1459162 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:42 build_dir
+ 1459171 -rw-rw-r--  1000   1000         0 20-Apr-2021 15:43 .timestamp
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+
+dir_partition inode=1459170
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches/004-add-sipeed-maixii.patch
+ 1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1459163 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 ..
+ 1459172 -rw-rw-r--  1000   1000         0 20-Apr-2021 15:52 Sipeed_MaixII_defconfig
+ 1459173 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 configs
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+
+dir_partition inode=1454037
+ 1 * Linux                    2   0 33 83220   4 35   83883999 [/]
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 42 GB / 39 GiB
+Directory /home/xuhui/openwrt/patches
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 ..
+ 1459180 -rw-rw-r--  1000   1000        78 20-Apr-2021 15:52 series
+X1459170 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 004-add-sipeed-maixii.patch
+X1453845 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:43 004-add-sipeed-maixii.patch~
+Directory /home/xuhui/openwrt
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 .
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 ..
+ 1453793 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:54 .git
+ 1453821 -rw-rw-r--  1000   1000         8 12-Apr-2021 16:09 .gitattributes
+ 1453836 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 .github
+ 1453839 -rw-rw-r--  1000   1000       277 12-Apr-2021 16:09 .gitignore
+ 1457492 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 .pc
+ 1453848 -rw-rw-r--  1000   1000       106 12-Apr-2021 16:09 BSDmakefile
+ 1453849 -rw-rw-r--  1000   1000       284 12-Apr-2021 16:09 COPYING
+ 1453850 -rw-rw-r--  1000   1000       502 12-Apr-2021 16:09 Config.in
+ 1453851 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 LICENSES
+ 1453859 -rw-rw-r--  1000   1000      3831 12-Apr-2021 16:09 Makefile
+ 1453860 -rw-rw-r--  1000   1000      3484 12-Apr-2021 16:09 README.md
+ 1453861 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 config
+ 1453866 -rw-rw-r--  1000   1000       513 12-Apr-2021 16:09 feeds.conf.default
+ 1453867 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 include
+ 1453931 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:11 package
+ 1454037 drwxrwxr-x  1000   1000      4096 20-Apr-2021 15:52 patches
+ 1454041 -rw-rw-r--  1000   1000     14603 12-Apr-2021 16:09 rules.mk
+ 1454042 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 scripts
+ 1454160 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 target
+ 1454262 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 toolchain
+ 1454430 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:09 tools
+ 1454447 drwxrwxr-x  1000   1000      4096 12-Apr-2021 16:10 feeds
+ 1454477 drwxrwxr-x  1000   1000     20480 20-Apr-2021 15:47 tmp
+ 1586125 drwxrwxr-x  1000   1000      4096 19-Apr-2021 22:54 staging_dir
+ 1459110 drwxr-xr-x  1000   1000      4096 20-Apr-2021 15:47 dl
+ 1459199 -rw-rw-r--  1000   1000    226508 16-Apr-2021 14:11 .config
+ 1469694 drwxr-xr-x  1000   1000      4096 13-Apr-2021 00:07 bin
+ 1586169 drwxr-xr-x  1000   1000      4096 19-Apr-2021 22:55 build_dir
+ 1471703 -rw-r--r--  1000   1000       176 13-Apr-2021 00:47 key-build
+ 1457335 -rw-rw-r--  1000   1000    226470 16-Apr-2021 13:44 .config.old
+ 1471704 -rw-r--r--  1000   1000        92 13-Apr-2021 00:47 key-build.pub
+ 1471706 -rw-r--r--  1000   1000       260 13-Apr-2021 00:47 key-build.ucert.revoke
+ 1471708 -rw-r--r--  1000   1000       356 13-Apr-2021 00:47 key-build.ucert
+ 1459187 -rw-rw-r--  1000   1000         0 20-Apr-2021 16:29 testdisk.log
+Directory /home/xuhui
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 .
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 ..
+  139898 drwxr-xr-x  1000   1000      4096 11-Apr-2021 16:08 .subversion
+  150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history
+ 1453792 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:24 openwrt
+  191927 -rw-rw-r--  1000   1000        51 12-Apr-2021 14:40 .gitconfig
+ 1459116 drwx------  1000   1000      4096 20-Apr-2021 10:36 .cache
+  131076 -rw-r--r--  1000   1000         0 12-Apr-2021 16:43 .sudo_as_admin_successful
+  131077 drwxrwxr-x  1000   1000      4096 20-Apr-2021 16:14 .vscode-server
+  131082 -rw-rw-r--  1000   1000       183 15-Apr-2021 21:45 .wget-hsts
+  164544 -rw-------  1000   1000       781 14-Apr-2021 11:00 .viminfo
+  163538 drwx------  1000   1000      4096 14-Apr-2021 22:56 .config
+X 150886 -rw-------  1000   1000     13511 20-Apr-2021 01:32 .bash_history-49374.tmp
+Directory /home
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 .
+       2 drwxr-xr-x     0      0      4096  9-Apr-2021 23:59 ..
+  131075 drwxr-xr-x  1000   1000      4096 20-Apr-2021 01:32 xuhui
+Directory /
+       2 drwxr-xr-x     0      0      4096  9-Apr-2021 23:59 .
+       2 drwxr-xr-x     0      0      4096  9-Apr-2021 23:59 ..
+      11 drwx------     0      0     16384 18-Mar-2021 14:35 lost+found
+      12 -rw-------     0      0 993249280 18-Mar-2021 14:35 swapfile
+ 1048577 drwxr-xr-x     0      0      4096 16-Apr-2021 11:51 etc
+  786433 drwxr-xr-x     0      0      4096 18-Mar-2021 14:36 media
+      13 lrwxrwxrwx     0      0         7 18-Mar-2021 14:36 bin
+  917505 drwxr-xr-x     0      0      4096 18-Mar-2021 14:57 boot
+ 1179649 drwxr-xr-x     0      0      4096 18-Mar-2021 14:36 dev
+  131073 drwxr-xr-x     0      0      4096 11-Apr-2021 15:11 home
+      14 lrwxrwxrwx     0      0         7 18-Mar-2021 14:36 lib
+      15 lrwxrwxrwx     0      0         9 18-Mar-2021 14:36 lib32
+      16 lrwxrwxrwx     0      0         9 18-Mar-2021 14:36 lib64
+      17 lrwxrwxrwx     0      0        10 18-Mar-2021 14:36 libx32
+  262145 drwxr-xr-x     0      0      4096 12-Apr-2021 14:37 mnt
+  393217 drwxr-xr-x     0      0      4096 10-Apr-2021 00:01 opt
+  655361 drwxr-xr-x     0      0      4096 15-Apr-2020 19:09 proc
+  917506 drwx------     0      0      4096 14-Apr-2021 17:50 root
+  655362 drwxr-xr-x     0      0      4096 18-Mar-2021 14:42 run
+      18 lrwxrwxrwx     0      0         8 18-Mar-2021 14:36 sbin
+  131074 drwxr-xr-x     0      0      4096 23-Apr-2020 15:34 srv
+  262146 drwxr-xr-x     0      0      4096 15-Apr-2020 19:09 sys
+  393218 drwxrwxrwt     0      0      4096 20-Apr-2021 16:24 tmp
+  262147 drwxr-xr-x     0      0      4096 18-Mar-2021 14:36 usr
+  786436 drwxr-xr-x     0      0      4096 12-Apr-2021 10:47 var
+X     19 drwxr-xr-x  1000   1000         0 12-Apr-2021 16:07 .ismount-test-file
+
+TestDisk exited normally.

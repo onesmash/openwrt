@@ -50,7 +50,7 @@ Index: b/arch/arm/include/asm/arch-sunxi/dram.h
  #elif defined(CONFIG_MACH_SUN8I_A33)
 Index: b/arch/arm/mach-sunxi/Makefile
 ===================================================================
---- b/arch/arm/mach-sunxi/Makefile
+--- a/arch/arm/mach-sunxi/Makefile
 +++ b/arch/arm/mach-sunxi/Makefile
 @@ -31,6 +31,7 @@ obj-$(CONFIG_MACH_SUN50I_H6)	+= clock_su
  ifdef CONFIG_SPL_BUILD
@@ -1172,7 +1172,7 @@ Index: b/arch/arm/mach-sunxi/dram_sun8i_v831.c
 \ No newline at end of file
 Index: b/arch/arm/mach-sunxi/Kconfig
 ===================================================================
---- b/arch/arm/mach-sunxi/Kconfig
+--- a/arch/arm/mach-sunxi/Kconfig
 +++ b/arch/arm/mach-sunxi/Kconfig
 @@ -36,6 +36,12 @@ config DRAM_SUN8I_A83T
  	  Select this dram controller driver for Sun8i platforms,
@@ -1242,17 +1242,18 @@ Index: b/configs/Sipeed_MaixII_defconfig
 ===================================================================
 --- /dev/null
 +++ b/configs/Sipeed_MaixII_defconfig
-@@ -0,0 +1,7 @@
+@@ -0,0 +1,8 @@
 +CONFIG_ARM=y
 +CONFIG_ARCH_SUNXI=y
 +CONFIG_SPL=y
 +CONFIG_MACH_SUN8I=y
 +CONFIG_MACH_SUN8I_V831=y
 +CONFIG_DRAM_SUN8I_V831=y
++CONFIG_OF_CONTROL=y
 +CONFIG_DEFAULT_DEVICE_TREE="sun8i-v831"
 Index: b/arch/arm/include/asm/arch-sunxi/gpio.h
 ===================================================================
---- b/arch/arm/include/asm/arch-sunxi/gpio.h
+--- a/arch/arm/include/asm/arch-sunxi/gpio.h
 +++ b/arch/arm/include/asm/arch-sunxi/gpio.h
 @@ -203,6 +203,7 @@ enum sunxi_gpio_number {
  #define SUN50I_GPH_TWI1		2
@@ -1264,7 +1265,7 @@ Index: b/arch/arm/include/asm/arch-sunxi/gpio.h
  
 Index: b/arch/arm/mach-sunxi/board.c
 ===================================================================
---- b/arch/arm/mach-sunxi/board.c
+--- a/arch/arm/mach-sunxi/board.c
 +++ b/arch/arm/mach-sunxi/board.c
 @@ -83,6 +83,10 @@ static int gpio_init(void)
  	sunxi_gpio_set_cfgpin(SUNXI_GPF(4), SUNXI_GPF_UART0);
@@ -1680,4 +1681,86 @@ Index: b/include/dt-bindings/reset/sun8i-v833-ccu.h
 +
 +#endif /* _DT_BINDINGS_RESET_SUN8I_V833_H_ */
 \ No newline at end of file
-
+Index: b/arch/arm/dts/Makefile
+===================================================================
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -494,6 +494,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-wexler-tab7200.dtb \
+ 	sun7i-a20-wits-pro-a20-dkt.dtb \
+ 	sun7i-a20-yones-toptech-bd1078.dtb
++dtb-$(CONFIG_MACH_SUN8I_V831) += sun8i-v831.dtb
+ dtb-$(CONFIG_MACH_SUN8I_A23) += \
+ 	sun8i-a23-evb.dtb \
+ 	sun8i-a23-gt90h-v4.dtb \
+Index: b/arch/arm/dts/sun8i-v831-u-boot.dtsi
+===================================================================
+--- /dev/null
++++ b/arch/arm/dts/sun8i-v831-u-boot.dtsi
+@@ -0,0 +1,57 @@
++#include <config.h>
++
++/ {
++	model = "Sipeed MaixII";
++	compatible = "sipeed,maixii", "allwinner,sun8i-v831";
++
++	aliases {
++					serial0 = &uart0;
++	};
++
++	chosen {
++					stdout-path = "serial0:115200n8";
++	};
++
++	reg_vcc3v3: vcc3v3 {
++					compatible = "regulator-fixed";
++					regulator-name = "vcc3v3";
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++	};
++
++	binman {
++		filename = "u-boot-sunxi-with-spl.bin";
++		pad-byte = <0xff>;
++		blob {
++			filename = "spl/sunxi-spl.bin";
++		};
++		u-boot-img {
++			offset = <CONFIG_SPL_PAD_TO>;
++		};
++	};
++};
++
++&mmc0 {
++        vmmc-supply = <&reg_vcc3v3>;
++        cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
++        bus-width = <4>;
++        status = "okay";
++};
++
++&spi0 {
++        pinctrl-0 = <&spi0_qspi_pins>, <&spi0_cs_pin>;
++        pinctrl-names = "default";
++        status = "okay";
++
++        flash@0 {
++                compatible = "winbond,w25q128", "jedec,spi-nor";
++                reg = <0>;
++                spi-max-frequency = <4000000>;
++        };
++};
++
++&uart0 {
++        pinctrl-names = "default";
++        pinctrl-0 = <&uart0_ph9_ph10_pins>;
++        status = "okay";
++};
+\ No newline at end of file
+Index: b/arch/arm/dts/sun8i-v831.dts
+===================================================================
+--- /dev/null
++++ b/arch/arm/dts/sun8i-v831.dts
+@@ -0,0 +1,2 @@
++/dts-v1/;
++#include "sun8i-v831.dtsi"
+\ No newline at end of file

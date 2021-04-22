@@ -2328,3 +2328,71 @@ Index: linux-5.4.109/drivers/rtc/rtc-sun6i.c
  	{ .compatible = "allwinner,sun50i-h5-rtc" },
  	{ .compatible = "allwinner,sun50i-h6-rtc" },
  	{ /* sentinel */ },
+Index: b/arch/arm/boot/dts/Makefile
+===================================================================
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1129,7 +1129,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-t3-cqa3t-bv3.dtb \
+ 	sun8i-v3s-licheepi-zero.dtb \
+ 	sun8i-v3s-licheepi-zero-dock.dtb \
+-	sun8i-v40-bananapi-m2-berry.dtb
++	sun8i-v40-bananapi-m2-berry.dtb \
++	sun8i-v831.dtb
+ dtb-$(CONFIG_MACH_SUN9I) += \
+ 	sun9i-a80-optimus.dtb \
+ 	sun9i-a80-cubieboard4.dtb
+Index: b/arch/arm/boot/dts/sun8i-v831.dts
+===================================================================
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-v831.dts
+@@ -0,0 +1,48 @@
++/dts-v1/;
++#include "sun8i-v831.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++        model = "Sipeed MaixII";
++        compatible = "sipeed,maixii", "allwinner,sun8i-v831";
++
++        aliases {
++                serial0 = &uart0;
++        };
++
++        chosen {
++                stdout-path = "serial0:115200n8";
++        };
++
++        reg_vcc3v3: vcc3v3 {
++                compatible = "regulator-fixed";
++                regulator-name = "vcc3v3";
++                regulator-min-microvolt = <3300000>;
++                regulator-max-microvolt = <3300000>;
++        };
++};
++
++&mmc0 {
++        vmmc-supply = <&reg_vcc3v3>;
++        cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
++        bus-width = <4>;
++        status = "okay";
++};
++
++&spi0 {
++        pinctrl-0 = <&spi0_qspi_pins>, <&spi0_cs_pin>;
++        pinctrl-names = "default";
++        status = "okay";
++
++        flash@0 {
++                compatible = "winbond,w25q128", "jedec,spi-nor";
++                reg = <0>;
++                spi-max-frequency = <4000000>;
++        };
++};
++
++&uart0 {
++        pinctrl-names = "default";
++        pinctrl-0 = <&uart0_ph9_ph10_pins>;
++        status = "okay";
++};
+\ No newline at end of file
